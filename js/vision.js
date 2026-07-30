@@ -48,47 +48,50 @@ const Board = (() => {
   function focus(it) {
     if (focusEl) return;
     const b = host();
-    const src = Store.getImg('vb:' + it.id);
 
+    // blur the entire board as one unit
+    b.classList.add('vb-blurred');
+
+    // overlay sits ABOVE the blurred board, as a child of the board's parent
     const overlay = el('div', 'vb-focus');
     const stageImg = el('div', 'vb-focus-img');
-    const noteWrap = el('div', 'vb-focus-note');
-    const ta = el('textarea', 'vb-focus-ta');
-    ta.placeholder = 'Attach a note to this image…';
+    const im = el('img');
+    Store.getImg('vb:' + it.id).then(u => { if (u) im.src = u; });
+    stageImg.appendChild(im);
+
+    // one-line note bar, pinned near the bottom of the focused image
+    const noteBar = el('div', 'vb-focus-note');
+    const ta = el('input', 'vb-focus-ta');
+    ta.type = 'text';
+    ta.placeholder = 'Attach a note…';
     ta.value = it.note || '';
     ta.onpointerdown = e => e.stopPropagation();
     ta.oninput = () => { it.note = ta.value; };
-    const label = el('div', 'vb-focus-label', 'NOTE');
-    const hint = el('div', 'vb-focus-hint', 'Click anywhere outside to close');
-    noteWrap.append(label, ta, hint);
+    ta.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); close(); } };
+    noteBar.appendChild(ta);
+
     stageImg.onpointerdown = e => e.stopPropagation();
-    overlay.append(stageImg, noteWrap);
-    b.appendChild(overlay);
+    noteBar.onpointerdown = e => e.stopPropagation();
+    overlay.append(stageImg, noteBar);
+    // append to the board's parent so it's not affected by the board's blur
+    b.parentElement.appendChild(overlay);
     focusEl = overlay;
 
-    // put the image in
-    const im = el('img');
-    src.then(u => { if (u) im.src = u; });
-    stageImg.appendChild(im);
-
-    // animate: dim the board, grow the image to centre
-    requestAnimationFrame(() => {
-      overlay.classList.add('in');
-    });
+    requestAnimationFrame(() => overlay.classList.add('in'));
 
     function close() {
       it.note = ta.value;
-      save();               // persists + syncs the note
+      save();
       overlay.classList.remove('in');
       overlay.classList.add('out');
-      setTimeout(() => { overlay.remove(); focusEl = null; render(); }, 320);
+      b.classList.remove('vb-blurred');
+      setTimeout(() => { overlay.remove(); focusEl = null; render(); }, 280);
       document.removeEventListener('keydown', esc);
     }
     function esc(e) { if (e.key === 'Escape') { e.stopPropagation(); close(); } }
     overlay.addEventListener('pointerdown', e => { if (e.target === overlay) close(); });
     document.addEventListener('keydown', esc);
-    // focus the textarea shortly after the animation begins
-    setTimeout(() => ta.focus(), 260);
+    setTimeout(() => ta.focus(), 220);
   }
 
   function wire(n, it) {
