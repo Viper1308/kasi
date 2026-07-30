@@ -29,6 +29,8 @@ const Board = (() => {
       if (it.type === 'img') {
         const img = el('img'); n.appendChild(img);
         Store.getImg('vb:' + it.id).then(u => { if (u) img.src = u; });
+        if (it.note) n.appendChild(el('div', 'vb-noteflag', '✎'));
+        n.addEventListener('dblclick', ev => { ev.preventDefault(); ev.stopPropagation(); focus(it); });
       } else {
         const ta = el('textarea'); ta.value = it.text || ''; ta.placeholder = 'Write here…';
         ta.onchange = () => { it.text = ta.value; save(); };
@@ -39,6 +41,54 @@ const Board = (() => {
       wire(n, it);
       b.appendChild(n);
     });
+  }
+
+  /* ---- focus mode: double-click an image to enlarge + annotate ---- */
+  let focusEl = null;
+  function focus(it) {
+    if (focusEl) return;
+    const b = host();
+    const src = Store.getImg('vb:' + it.id);
+
+    const overlay = el('div', 'vb-focus');
+    const stageImg = el('div', 'vb-focus-img');
+    const noteWrap = el('div', 'vb-focus-note');
+    const ta = el('textarea', 'vb-focus-ta');
+    ta.placeholder = 'Attach a note to this image…';
+    ta.value = it.note || '';
+    ta.onpointerdown = e => e.stopPropagation();
+    ta.oninput = () => { it.note = ta.value; };
+    const label = el('div', 'vb-focus-label', 'NOTE');
+    const hint = el('div', 'vb-focus-hint', 'Click anywhere outside to close');
+    noteWrap.append(label, ta, hint);
+    stageImg.onpointerdown = e => e.stopPropagation();
+    overlay.append(stageImg, noteWrap);
+    b.appendChild(overlay);
+    focusEl = overlay;
+
+    // put the image in
+    const im = el('img');
+    src.then(u => { if (u) im.src = u; });
+    stageImg.appendChild(im);
+
+    // animate: dim the board, grow the image to centre
+    requestAnimationFrame(() => {
+      overlay.classList.add('in');
+    });
+
+    function close() {
+      it.note = ta.value;
+      save();               // persists + syncs the note
+      overlay.classList.remove('in');
+      overlay.classList.add('out');
+      setTimeout(() => { overlay.remove(); focusEl = null; render(); }, 320);
+      document.removeEventListener('keydown', esc);
+    }
+    function esc(e) { if (e.key === 'Escape') { e.stopPropagation(); close(); } }
+    overlay.addEventListener('pointerdown', e => { if (e.target === overlay) close(); });
+    document.addEventListener('keydown', esc);
+    // focus the textarea shortly after the animation begins
+    setTimeout(() => ta.focus(), 260);
   }
 
   function wire(n, it) {
