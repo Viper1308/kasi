@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Polymath OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ═══════════ LOGIN GATE ═══════════ -->
+<div id="loginGate" class="login-gate">
+  <div class="login-room">
+    <div class="login-desk">
+      <div class="login-lamp"></div>
+      <div class="login-box">
+        <div class="login-screen-frame">
+          <div class="login-screen-inner">
+            <div class="login-logo">POLYMATH<i>OS</i></div>
+            <p class="login-sub" id="loginSub">private terminal</p>
+            <input type="text" id="loginUser" class="login-inp" placeholder="user" autocomplete="username" autofocus>
+            <input type="password" id="loginPass" class="login-inp" placeholder="password" autocomplete="current-password">
+            <button class="login-btn" id="loginBtn">Log in</button>
+            <p class="login-err" id="loginErr"></p>
+            <p class="login-switch" id="loginSwitch" hidden></p>
+          </div>
+        </div>
+        <div class="login-stand"></div>
+        <div class="login-base"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ MAIN APP ═══════════ -->
+<div id="app" class="app hidden">
+
+  <!-- ── THE DESK (home) ── -->
+  <div id="deskView" class="desk-scene">
+
+    <!-- atmospheric backdrop -->
+    <div class="room-sky"></div>
+    <div class="room-stars" id="roomStars"></div>
+    <div class="room-window">
+      <div class="win-frame">
+        <div class="win-glass">
+          <div class="win-moon"></div>
+          <div class="win-cloud c1"></div>
+          <div class="win-cloud c2"></div>
+          <div class="win-rain" id="winRain"></div>
+        </div>
+        <div class="win-mullion-v"></div>
+        <div class="win-mullion-h"></div>
+      </div>
+      <div class="win-sill"></div>
+    </div>
+
+    <div class="room-wall"></div>
+    <div class="dust" id="dust"></div>
+
+    <!-- string lights across the top -->
+    <div class="string-lights" id="stringLights"></div>
+
+    <!-- desk lamp with warm pool of light -->
+    <div class="room-lamp">
+      <div class="lamp-arm"></div>
+      <div class="lamp-head"></div>
+    </div>
+    <div class="lamp-pool"></div>
+
+    <!-- plant -->
+    <div class="room-plant">
+      <div class="plant-pot"></div>
+      <div class="plant-leaf l1"></div>
+      <div class="plant-leaf l2"></div>
+      <div class="plant-leaf l3"></div>
+      <div class="plant-leaf l4"></div>
+      <div class="plant-leaf l5"></div>
+      <div class="plant-leaf l6"></div>
+    </div>
+
+    <!-- clock -->
+    <div class="room-clock" id="deskClock">19:45</div>
+
+    <!-- vinyl record spinning -->
+    <div class="room-vinyl">
+      <div class="vinyl-disc"></div>
+      <div class="vinyl-note n1">♪</div>
+      <div class="vinyl-note n2">♫</div>
+    </div>
+
+    <!-- settings gear -->
+    <button class="settings-gear" id="settingsGear" title="Settings">
+      <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 8a4 4 0 100 8 4 4 0 000-8zM12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+    </button>
+
+    <!-- 3×2 monitor grid -->
+    <div class="monitor-rig">
+      <div class="mon-row top">
+        <button class="monitor left" data-view="profile" id="mon-profile">
+          <div class="mon-bezel">
+            <div class="mon-screen">
+              <div class="mon-label">THE RECORD</div>
+              <div class="mon-desc">your CV</div>
+              <svg class="mon-icon" viewBox="0 0 40 40"><circle cx="20" cy="14" r="7"/><path d="M8 36c0-8 5-13 12-13s12 5 12 13"/></svg>
+            </div>
+          </div>
+          <div class="mon-neck"></div>
+        </button>
+        <button class="monitor center" data-view="web" id="mon-web">
+          <div class="mon-bezel">
+            <div class="mon-screen">
+              <div class="mon-label">THE WEB</div>
+              <div class="mon-desc">78 strands</div>
+              <svg class="mon-icon" viewBox="0 0 40 40"><circle cx="20" cy="20" r="12" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="20" x2="32" y2="20" stroke="currentColor" stroke-width="1"/><line x1="20" y1="8" x2="20" y2="32" stroke="currentColor" stroke-width="1"/><line x1="11" y1="11" x2="29" y2="29" stroke="currentColor" stroke-width="1"/></svg>
+            </div>
+          </div>
+          <div class="mon-neck"></div>
+        </button>
+        <button class="monitor right" data-view="books" id="mon-books">
+          <div class="mon-bezel">
+            <div class="mon-screen">
+              <div class="mon-label">THE SHELF</div>
+              <div class="mon-desc">book logger</div>
+              <svg class="mon-icon" viewBox="0 0 40 40"><rect x="8" y="8" width="5" height="24" rx="1"/><rect x="15" y="12" width="4" height="20" rx="1"/><rect x="21" y="6" width="5" height="26" rx="1"/><rect x="28" y="10" width="4" height="22" rx="1"/></svg>
+            </div>
+          </div>
+          <div class="mon-neck"></div>
+        </button>
+      </div>
+      <div class="mon-row bottom">
+        <button class="monitor left" data-view="calendar" id="mon-calendar">
+          <div class="mon-bezel">
+            <div class="mon-screen">
+              <div class="mon-label">THE CALENDAR</div>
+              <div class="mon-desc">plan it</div>
+              <svg class="mon-icon" viewBox="0 0 40 40"><rect x="8" y="10" width="24" height="22" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="16" x2="32" y2="16" stroke="currentColor" stroke-width="1.5"/><line x1="15" y1="8" x2="15" y2="12" stroke="currentColor" stroke-width="1.5"/><line x1="25" y1="8" x2="25" y2="12" stroke="currentColor" stroke-width="1.5"/></svg>
+            </div>
+          </div>
+          <div class="mon-neck"></div>
+        </button>
+        <button class="monitor center" data-view="thoughts" id="mon-thoughts">
+          <div class="mon-bezel">
+            <div class="mon-screen">
+              <div class="mon-label">THE MARGIN</div>
+              <div class="mon-desc">thoughts & quotes</div>
+              <svg class="mon-icon" viewBox="0 0 40 40"><line x1="10" y1="12" x2="30" y2="12" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="18" x2="26" y2="18" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="24" x2="22" y2="24" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="30" x2="18" y2="30" stroke="currentColor" stroke-width="1.5"/></svg>
+            </div>
+          </div>
+          <div class="mon-neck"></div>
+        </button>
+        <button class="monitor right" data-view="vision" id="mon-vision">
+          <div class="mon-bezel">
+            <div class="mon-screen">
+              <div class="mon-label">THE BOARD</div>
+              <div class="mon-desc">vision board</div>
+              <svg class="mon-icon" viewBox="0 0 40 40"><rect x="7" y="8" width="14" height="10" rx="1.5"/><rect x="23" y="8" width="10" height="15" rx="1.5"/><rect x="7" y="20" width="10" height="12" rx="1.5"/><rect x="19" y="25" width="14" height="7" rx="1.5"/></svg>
+            </div>
+          </div>
+          <div class="mon-neck"></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- desk surface -->
+    <div class="desk-surface">
+      <div class="desk-keyboard">
+        <div class="kb-glow"></div>
+      </div>
+      <div class="desk-mouse"></div>
+      <div class="desk-mug">
+        <div class="mug-steam s1"></div>
+        <div class="mug-steam s2"></div>
+        <div class="mug-steam s3"></div>
+      </div>
+      <div class="desk-cup"></div>
+      <div class="desk-stack">
+        <div class="sbook sb1"></div>
+        <div class="sbook sb2"></div>
+        <div class="sbook sb3"></div>
+      </div>
+    </div>
+    <div class="desk-under">
+      <div class="desk-pc">
+        <div class="pc-glass"></div>
+        <div class="pc-fan"></div>
+        <div class="pc-led"></div>
+      </div>
+      <div class="desk-books">
+        <div class="dbook b1"></div>
+        <div class="dbook b2"></div>
+        <div class="dbook b3"></div>
+        <div class="dbook b4"></div>
+        <div class="dbook b5"></div>
+      </div>
+    </div>
+    <div class="desk-floor"></div>
+  </div>
+
+  <!-- ── SETTINGS PANEL ── -->
+  <div id="settingsPanel" class="settings-panel hidden">
+    <div class="settings-backdrop" id="settingsBackdrop"></div>
+    <div class="settings-card">
+      <button class="settings-close" id="settingsClose">✕</button>
+      <h2 class="settings-title">Settings</h2>
+
+      <div class="settings-block">
+        <h4>Theme</h4>
+        <p class="settings-desc">Pick the mood of the room.</p>
+        <div class="theme-grid" id="themeGrid"></div>
+      </div>
+
+      <div class="settings-block">
+        <h4>Ambience</h4>
+        <label class="settings-toggle"><input type="checkbox" id="setRain" checked><span>Rain on the window</span></label>
+        <label class="settings-toggle"><input type="checkbox" id="setDust" checked><span>Drifting dust motes</span></label>
+        <label class="settings-toggle"><input type="checkbox" id="setLights" checked><span>String lights</span></label>
+        <label class="settings-toggle"><input type="checkbox" id="setVinyl" checked><span>Spinning vinyl</span></label>
+      </div>
+
+      <div class="settings-block">
+        <h4>Data</h4>
+        <div class="settings-row">
+          <button class="btn ghost" id="setExport">Back up everything</button>
+          <label class="btn ghost">Restore<input type="file" id="setImport" accept=".json" hidden></label>
+        </div>
+        <button class="link-btn danger" id="setLogout" style="margin-top:10px">Log out</button>
+        <p class="settings-desc" id="setGauge"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FULLSCREEN VIEW (when a monitor is "active") ── -->
+  <div id="fullView" class="full-view hidden">
+    <div class="full-top-bar">
+      <button class="back-btn" id="backBtn" title="Back to desk (Esc)">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        <span>Desk</span>
+      </button>
+      <div class="tab-row" id="tabRow">
+        <button class="tab" data-view="profile">The Record</button>
+        <button class="tab" data-view="web">The Web</button>
+        <button class="tab" data-view="books">The Shelf</button>
+        <button class="tab" data-view="calendar">Calendar</button>
+        <button class="tab" data-view="thoughts">Margin</button>
+        <button class="tab" data-view="vision">Board</button>
+      </div>
+      <div class="top-right">
+        <span class="sync-dot" id="syncDot" title="Sync status" hidden></span>
+        <span class="top-clock" id="topClock"></span>
+        <button class="top-action" id="topExport" title="Back up data">💾</button>
+        <label class="top-action" title="Restore backup">📂<input type="file" id="fileImport" accept=".json" hidden></label>
+        <span class="storage-gauge" id="gauge"></span>
+      </div>
+    </div>
+    <div class="full-screen-wrap">
+      <div class="full-screen" id="screen">
+
+        <!-- ══ THE RECORD ══ -->
+        <section class="view" id="view-profile">
+          <div class="record">
+            <div class="record-id" id="idCard"></div>
+            <div class="record-body" id="recordBody"></div>
+          </div>
+        </section>
+
+        <!-- ══ THE WEB ══ -->
+        <section class="view" id="view-web">
+          <div class="web-wrap">
+            <div class="web-tools">
+              <button class="tool" id="wLink" title="Drag from one node to another to draw a strand">Draw strand</button>
+              <button class="tool" id="wAddSubject">Add subject</button>
+              <button class="tool" id="wReset" title="Return every node to the ring">Re-ring</button>
+              <label class="tool switch"><input type="checkbox" id="wAllStrands" checked><span>All strands</span></label>
+              <span class="tool-hint" id="wHint">Click a strand to open it. Drag a node to move it.</span>
+            </div>
+            <svg id="webSvg" class="web-svg"></svg>
+            <aside class="web-panel" id="webPanel" hidden></aside>
+          </div>
+        </section>
+
+        <!-- ══ THE SHELF ══ -->
+        <section class="view" id="view-books">
+          <div class="shelf-head">
+            <input id="bkTitle" class="inp" placeholder="Title">
+            <input id="bkAuthor" class="inp" placeholder="Author">
+            <select id="bkStatus" class="inp narrow">
+              <option value="reading">Reading</option>
+              <option value="read">Finished</option>
+              <option value="want">Want to read</option>
+            </select>
+            <button class="btn" id="bkAdd">Shelve it</button>
+            <span class="shelf-sep"></span>
+            <label class="file-btn">Import list<input type="file" id="bkImport" accept=".csv,.xlsx,.xls,.tsv,.txt" hidden></label>
+            <button class="link-btn tiny" id="bkTemplate" title="Download a blank CSV in the right format">Template</button>
+            <span class="tool-hint" id="bkHint">Covers and spine colours are pulled from Open Library.</span>
+          </div>
+          <div class="shelves" id="shelves"></div>
+          <div class="book-stage" id="bookStage" hidden></div>
+        </section>
+
+        <!-- ══ THE CALENDAR ══ -->
+        <section class="view" id="view-calendar">
+          <div class="cal-rig">
+            <aside class="strip left">
+              <div class="strip-block">
+                <h4>View</h4>
+                <div class="seg" id="calViews">
+                  <button data-v="month" class="on">Month</button>
+                  <button data-v="week">Week</button>
+                  <button data-v="day">Day</button>
+                  <button data-v="year">Year</button>
+                </div>
+              </div>
+              <div class="strip-block">
+                <h4>Calendars</h4>
+                <ul class="cal-list" id="calList"></ul>
+                <div class="row-add">
+                  <input id="calNewName" class="inp tiny" placeholder="New calendar">
+                  <button class="btn tiny" id="calAdd">+</button>
+                </div>
+              </div>
+              <div class="strip-block">
+                <h4>Google Calendar</h4>
+                <label class="file-btn">Import .ics<input type="file" id="icsFile" accept=".ics" hidden></label>
+                <p class="micro">Export from Google Calendar → Settings → Import/Export, then drop the file here.</p>
+              </div>
+            </aside>
+            <div class="cal-core">
+              <div class="cal-head">
+                <button class="nav-btn" id="calPrev">‹</button>
+                <h3 id="calTitle"></h3>
+                <button class="nav-btn" id="calNext">›</button>
+                <button class="nav-btn today" id="calToday">Today</button>
+              </div>
+              <div class="cal-square" id="calSquare"></div>
+            </div>
+            <aside class="strip right">
+              <div class="strip-block">
+                <h4>Workspace</h4>
+                <textarea id="wsInput" class="inp area" rows="2" placeholder="Task or note… (Enter to log)"></textarea>
+                <div class="ws-meta">
+                  <select id="wsCal" class="inp tiny"></select>
+                  <select id="wsKind" class="inp tiny"><option value="task">Task</option><option value="note">Note</option></select>
+                </div>
+              </div>
+              <div class="strip-block grow">
+                <h4>Unscheduled <span class="count" id="wsCount">0</span></h4>
+                <ul class="ws-list" id="wsList"></ul>
+                <p class="micro">Drag an item onto a day to schedule it.</p>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <!-- ══ THE MARGIN ══ -->
+        <section class="view" id="view-thoughts">
+          <div class="margin-head">
+            <textarea id="thInput" class="inp area big" rows="2" placeholder="A thought, half-formed. ⌘/Ctrl+Enter to keep it."></textarea>
+            <div class="margin-controls">
+              <div class="seg" id="thKind"><button data-k="thought" class="on">Thought</button><button data-k="quote">Quote</button></div>
+              <input id="thWho" class="inp" placeholder="Said by…" hidden>
+              <input id="thSearch" class="inp" placeholder="Search / #tag">
+            </div>
+          </div>
+          <div class="margin-grid" id="thList"></div>
+        </section>
+
+        <!-- ══ THE BOARD ══ -->
+        <section class="view" id="view-vision">
+          <div class="board-tools">
+            <label class="file-btn">Add pictures<input type="file" id="vbFile" accept="image/*" multiple hidden></label>
+            <button class="btn ghost" id="vbNote">Add note</button>
+            <button class="btn ghost" id="vbFront">Bring to front</button>
+            <button class="btn ghost danger" id="vbDel">Delete selected</button>
+            <span class="tool-hint">Drag to move. Pull any corner/edge to resize. Paste images directly.</span>
+          </div>
+          <div class="board" id="board" tabindex="0"></div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/store.js"></script>
+<script src="js/sync.js"></script>
+<script src="js/themes.js"></script>
+<script src="js/connections.js"></script>
+<script src="js/profile.js"></script>
+<script src="js/web.js"></script>
+<script src="js/books.js"></script>
+<script src="js/calendar.js"></script>
+<script src="js/thoughts.js"></script>
+<script src="js/vision.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

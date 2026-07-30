@@ -1,0 +1,211 @@
+# Polymath OS
+
+A private six-screen dashboard. No accounts, no server, no one else's copy of your data.
+
+**Login:** `admin` / `Timmyboi1!` (offline mode). Set up Supabase below for real accounts + sync across devices.
+
+---
+
+## Step-by-step: putting this on the internet with GitHub + Vercel
+
+You need: a browser. That's it. No terminal, no command line, nothing to install.
+
+### Part 1 — GitHub (where the code lives)
+
+1. Go to **github.com** and click **Sign up**. Use any email. Pick a username. Verify.
+2. Once you're in, click the **+** button in the top-right corner → **New repository**.
+3. Repository name: `polymath-os`
+4. Set it to **Public** (Vercel's free tier requires this; your login gate keeps people out).
+5. Leave everything else default. Click **Create repository**.
+6. On the next page, you'll see an empty repo. Click the link that says **uploading an existing file**.
+7. **Unzip the `polymath-os.zip`** file I gave you on your computer.
+8. **Drag the entire contents** into the GitHub upload area:
+   - `index.html`
+   - `css/` folder (with `style.css` inside)
+   - `js/` folder (with all the `.js` files inside)
+   - `README.md`
+9. Scroll down, click **Commit changes**.
+10. Done. Your code is on GitHub. The URL looks like `github.com/yourusername/polymath-os`.
+
+### Part 2 — Vercel (turns GitHub into a website)
+
+1. Go to **vercel.com** and click **Sign Up** → **Continue with GitHub**. Authorise it.
+2. You land on the Vercel dashboard. Click **Add New…** → **Project**.
+3. You'll see your GitHub repos listed. Find `polymath-os` and click **Import**.
+4. On the "Configure Project" screen:
+   - **Framework Preset:** leave as `Other`
+   - **Root Directory:** leave blank (it's the repo root)
+   - **Build Command:** leave blank
+   - **Output Directory:** leave blank
+5. Click **Deploy**.
+6. Wait 15–30 seconds. It'll say "Congratulations!"
+7. Click the preview or the URL. It looks like `polymath-os-yourusername.vercel.app`.
+8. You'll see the login screen. Type `admin` and `Timmyboi1!`. You're in.
+
+### Part 3 — Custom domain (optional, e.g. os.datamotion.in)
+
+1. In Vercel, go to your project → **Settings** → **Domains**.
+2. Type `os.datamotion.in` and click **Add**.
+3. Vercel shows you a CNAME record: something like `cname.vercel-dns.com`.
+4. Go to **Cloudflare** (where datamotion.in is managed).
+5. DNS → **Add record**:
+   - Type: `CNAME`
+   - Name: `os`
+   - Target: `cname.vercel-dns.com` (whatever Vercel told you)
+   - Proxy status: **DNS only** (grey cloud) — Vercel handles its own SSL
+6. Back in Vercel, click **Refresh**. It'll verify and issue an SSL certificate.
+7. `os.datamotion.in` now loads your dashboard.
+
+### Part 4 — Updating the site later
+
+**Option A (easy, through the browser):**
+1. Go to your repo on github.com.
+2. Click on a file (e.g. `js/app.js`).
+3. Click the pencil icon (Edit).
+4. Make your change, click **Commit changes**.
+5. Vercel detects the change and redeploys in ~30 seconds. That's it.
+
+**Option B (once you're comfortable):**
+1. Install GitHub Desktop (desktop app, no command line).
+2. Clone your repo.
+3. Edit files in any text editor.
+4. Commit and push. Vercel picks it up automatically.
+
+
+---
+
+## Importing your book list
+
+On The Shelf, click **Import list** and choose a `.csv`, `.xlsx`, or `.xls` file. Click **Template** to download a correctly-formatted blank CSV to fill in.
+
+**Expected columns** (header row, any order, extra columns ignored):
+
+| Column | Required | Notes |
+|---|---|---|
+| Title | yes | the only truly required field |
+| Author | no | helps cover lookup |
+| Status | no | `Reading`, `Finished`/`Read`, or `Want to read`. Defaults to Want to read |
+| Rating | no | 0–5 |
+| Year | no | publication year |
+| Notes | no | free text |
+
+If your file has no header row, the first column is treated as Title and the second as Author. Duplicate title+author pairs are skipped. Covers are fetched from Open Library automatically after import (needs internet).
+
+Excel import loads a small reader library from a CDN the first time — so the very first Excel import needs internet. CSV import works fully offline.
+
+---
+
+## Settings (gear icon, top-right of the desk)
+
+- **Theme** — six dark palettes: Midnight Amber, Deep Forest, Abyssal Blue, Velvet Plum, Ember Rust, Graphite Mono. Changes the whole app instantly and is remembered.
+- **Ambience** — toggle rain, dust motes, string lights, and the spinning vinyl on the desk.
+- **Data** — back up / restore everything, or log out.
+
+---
+
+## Sync across devices (Supabase)
+
+By default the app runs **offline** — data lives in each browser and doesn't sync, and login is the `admin` / `Timmyboi1!` gate. To log in with a real account and have the same data on your laptop, phone, and anywhere else, connect it to Supabase (free). Setup is browser-only, about ten minutes, roughly the same difficulty as the Vercel steps.
+
+### Part 1 — Create a Supabase project
+
+1. Go to **supabase.com** → **Start your project** → sign in with GitHub.
+2. Click **New project**. Give it a name (e.g. `polymath-os`), set a database password (save it somewhere — you won't need it often), pick the region closest to you, and create. Wait ~2 minutes for it to spin up.
+
+### Part 2 — Run the setup SQL
+
+1. In your project, open **SQL Editor** (left sidebar) → **New query**.
+2. Open the file **`supabase-setup.sql`** (included in this project), copy everything, paste it in, and click **Run**.
+3. You should see "Success." This creates your data table, a private images bucket, and the security rules that keep each account's data separate.
+
+### Part 3 — Turn off email confirmation (recommended for personal use)
+
+1. Go to **Authentication** → **Sign In / Providers** (or **Providers → Email**).
+2. Turn **Confirm email** OFF. This lets you sign up and log in immediately without clicking a confirmation link. (Leave it ON if you prefer — you'll just get a confirmation email the first time.)
+
+### Part 4 — Paste your keys into the app
+
+1. In Supabase, go to **Project Settings** → **API**.
+2. Copy two things:
+   - **Project URL** (looks like `https://abcdefgh.supabase.co`)
+   - **anon public** key (a long string under "Project API keys")
+3. Open **`js/config.js`** in this project and paste them in:
+   ```js
+   window.SUPABASE_CONFIG = {
+     url:     'https://abcdefgh.supabase.co',
+     anonKey: 'eyJhbGc...your-long-anon-key...'
+   };
+   ```
+4. Save. If you're deploying through GitHub, edit `js/config.js` on github.com (pencil icon), commit, and Vercel redeploys automatically.
+
+**Are these keys safe to commit to a public repo? Yes.** The anon key is *designed* to be public — it's in the browser on every request. Your data is protected by the Row Level Security rules from the SQL step, which enforce that each logged-in account can only ever touch its own rows. Nobody can read your data with just the anon key; they'd need your account password.
+
+### Part 5 — Use it
+
+1. Open the site. The login screen now says "sign in to sync across devices" and asks for an **email**.
+2. First time: click **Create an account**, enter any email and a password (6+ characters).
+3. On any other device, open the same URL and log in with the same email and password — your books, calendar, web, notes, profile, and vision-board images will all be there.
+
+A small dot appears top-right: **cyan** = synced, **amber pulsing** = saving, **red** = a sync error (it retries automatically).
+
+### How it works (so nothing surprises you)
+
+- **Local-first.** Your device keeps a full copy in the browser, so the app is instant and works even if your connection drops. Changes are pushed to Supabase in the background a moment after you make them.
+- **On login, the app pulls your cloud data down first,** then reloads once so everything shows up. That one automatic reload right after your first login is expected.
+- **Last write wins.** If you edit the *same* thing on two devices while both are offline, whichever syncs last wins for that item. For normal one-device-at-a-time use you'll never notice.
+- **Free tier limits:** 500 MB database (text — you'd need tens of thousands of entries to approach this) and 1 GB image storage. Vision-board images are compressed on upload, so 1 GB is a lot of pictures.
+- **Logging out** signs you out of the account. **Backup / Restore** in settings still works and is a good idea regardless — it's your own offline copy.
+
+### If you skip this
+
+Leave `js/config.js` blank and everything works exactly as before: offline, local-only, `admin` / `Timmyboi1!` login. No Supabase account needed.
+
+
+---
+
+## Where your data lives
+
+Everything is stored **in your browser, on your machine.**
+
+| What | Where | Size |
+|---|---|---|
+| Profile, books, calendar, thoughts, the web | `localStorage` | ~5 MB |
+| Vision board pictures, avatar | `IndexedDB` | hundreds of MB |
+
+**Storage is per browser, per domain.** Chrome and Safari are separate. `localhost` and `os.datamotion.in` are separate.
+
+**"Back up data"** (top bar, 💾 button) downloads one JSON with everything. **Restore** reads it back. Do this regularly and before clearing browser data.
+
+---
+
+## About the login
+
+The login gate is client-side — it keeps casual visitors out but anyone who reads the source code can find the password. This is fine for a personal dashboard.
+
+If you want real password protection later, Vercel supports Edge Middleware with proper authentication. That's a future upgrade, not something to worry about now.
+
+---
+
+## Keyboard shortcuts
+
+| Key | Action |
+|---|---|
+| `1`–`6` | Jump to a screen |
+| `Esc` | Back to desk |
+| `Ctrl/⌘ + Enter` | Save a thought (in The Margin) |
+
+---
+
+## The six screens
+
+**The Record** — editable CV. Click any field to change it. Add experience, education, certifications, achievements, skills.
+
+**The Web** — 13 subjects, 78 written connection dossiers (~23,000 words). Click any strand for the full breakdown. Add subjects, add topics, draw your own strands.
+
+**The Shelf** — type a title, it queries Open Library for the cover and paints the spine in the book's real colour. Click a spine to pull it off the shelf.
+
+**The Calendar** — square month view. Left strip: view modes and calendars. Right strip: workspace, type and Enter to log, drag onto a day. Import `.ics` from Google Calendar.
+
+**The Margin** — thoughts and quotes. Tag with `#hashtags`. Search. Double-click to edit.
+
+**The Board** — drag pictures in, paste from clipboard, add notes. Drag corners to resize freely.
