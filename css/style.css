@@ -704,7 +704,7 @@ body.no-vinyl .room-vinyl{display:none}
 /* ═══════════ 6. THE BOARD ═══════════ */
 /* the tool bar floats OVER the board, so opening it never shifts anything */
 .board-tools{
-  position:absolute;top:0;left:0;right:0;z-index:60;
+  position:absolute;top:0;left:0;right:0;z-index:60;isolation:isolate;
   background:linear-gradient(180deg,var(--panel),var(--panel-2));
   border-bottom:1px solid var(--line);
   box-shadow:0 20px 36px -30px #000;
@@ -728,6 +728,9 @@ body.no-vinyl .room-vinyl{display:none}
 .board{
   position:absolute;top:38px;left:0;right:0;bottom:0;overflow:hidden;
   background:#0f1720;
+  /* own stacking context: every picture's z-index is trapped inside the board,
+     so the tool bar (z-index 60) always wins no matter how high they climb */
+  z-index:0;isolation:isolate;
 }
 .board::before{
   content:"";position:absolute;inset:0;
