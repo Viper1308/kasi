@@ -371,12 +371,21 @@
 
         <!-- ══ THE BOARD ══ -->
         <section class="view" id="view-vision">
-          <div class="board-tools">
-            <label class="file-btn">Add pictures<input type="file" id="vbFile" accept="image/*" multiple hidden></label>
-            <button class="btn ghost" id="vbNote">Add note</button>
-            <button class="btn ghost" id="vbFront">Bring to front</button>
-            <button class="btn ghost danger" id="vbDel">Delete selected</button>
-            <span class="tool-hint">Drag to move · pull any corner to resize · double-click an image to enlarge & annotate · paste images directly</span>
+          <div class="board-tools" id="boardTools">
+            <div class="bt-bar">
+              <span class="bt-title">Board</span>
+              <span class="bt-hint">Drag to move · pull any corner to resize · double-click an image to enlarge</span>
+              <button class="bt-toggle" id="vbToolsToggle" aria-expanded="false" title="Show tools">
+                <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+            <div class="bt-body">
+              <label class="file-btn">Add pictures<input type="file" id="vbFile" accept="image/*" multiple hidden></label>
+              <button class="btn ghost" id="vbNote">Add note</button>
+              <button class="btn ghost" id="vbFront">Bring to front</button>
+              <button class="btn ghost danger" id="vbDel">Delete selected</button>
+              <span class="tool-hint">Paste an image straight in · Delete key removes the selected item</span>
+            </div>
           </div>
           <div class="board" id="board" tabindex="0"></div>
         </section>
