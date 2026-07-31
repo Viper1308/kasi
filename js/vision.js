@@ -57,6 +57,8 @@ const Board = (() => {
     const stageImg = el('div', 'vb-focus-img');
     const im = el('img');
     Store.getImg('vb:' + it.id).then(u => { if (u) im.src = u; });
+    // the photo is the only thing that swallows a click — everything else closes
+    im.addEventListener('pointerdown', e => e.stopPropagation());
     stageImg.appendChild(im);
 
     // one-line note bar, pinned near the bottom of the focused image
@@ -70,8 +72,6 @@ const Board = (() => {
     ta.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); close(); } };
     noteBar.appendChild(ta);
 
-    stageImg.onpointerdown = e => e.stopPropagation();
-    noteBar.onpointerdown = e => e.stopPropagation();
     overlay.append(stageImg, noteBar);
     // append to the board's parent so it's not affected by the board's blur
     b.parentElement.appendChild(overlay);
@@ -79,18 +79,21 @@ const Board = (() => {
 
     requestAnimationFrame(() => overlay.classList.add('in'));
 
+    let closing = false;
     function close() {
+      if (closing) return;
+      closing = true;
       it.note = ta.value;
       save();
       overlay.classList.remove('in');
       overlay.classList.add('out');
       b.classList.remove('vb-blurred');
       setTimeout(() => { overlay.remove(); focusEl = null; render(); }, 280);
-      document.removeEventListener('keydown', esc);
+      document.removeEventListener('keydown', esc, true);
     }
-    function esc(e) { if (e.key === 'Escape') { e.stopPropagation(); close(); } }
-    overlay.addEventListener('pointerdown', e => { if (e.target === overlay) close(); });
-    document.addEventListener('keydown', esc);
+    function esc(e) { if (e.key === 'Escape') { e.stopPropagation(); e.stopImmediatePropagation(); close(); } }
+    overlay.addEventListener('pointerdown', () => close());
+    document.addEventListener('keydown', esc, true);
     setTimeout(() => ta.focus(), 220);
   }
 
@@ -127,7 +130,23 @@ const Board = (() => {
     items = items.filter(i => i.id !== sel); sel = null; save(); render();
   }
 
+  /* ---- collapsible tool bar (floats over the board, never moves it) ---- */
+  function tools() {
+    const bar = document.getElementById('boardTools');
+    const btn = document.getElementById('vbToolsToggle');
+    if (!bar || !btn) return;
+    let open = Store.get('board.tools', false);
+    const paint = () => {
+      bar.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', String(open));
+      btn.title = open ? 'Hide tools' : 'Show tools';
+    };
+    btn.onclick = () => { open = !open; Store.set('board.tools', open); paint(); };
+    paint();
+  }
+
   function init() {
+    tools();
     document.getElementById('vbFile').onchange = e => { [...e.target.files].forEach(addImage); e.target.value = ''; };
     document.getElementById('vbNote').onclick = addNote;
     document.getElementById('vbDel').onclick = remove;
