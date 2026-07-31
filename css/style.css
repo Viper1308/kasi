@@ -563,20 +563,29 @@ body.no-vinyl .room-vinyl{display:none}
   border-radius:2px;padding:0 6px;
   box-shadow:inset 0 6px 16px -4px rgba(0,0,0,.7);
 }
-.shelf-books{display:flex;align-items:flex-end;gap:2px;min-height:180px;padding:12px 10px 0}
+.shelf-books{
+  display:flex;align-items:flex-end;gap:2px;min-height:210px;
+  padding:26px 10px 16px;flex-wrap:nowrap;
+  overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;
+}
+.shelf-books::-webkit-scrollbar{height:6px}
+.shelf-books::-webkit-scrollbar-thumb{background:#4a3420;border-radius:6px}
 .shelf-plank{
-  height:16px;border-radius:1px;margin-bottom:14px;
+  height:16px;border-radius:1px;margin-bottom:14px;margin-top:-16px;position:relative;z-index:2;
   background:linear-gradient(180deg,#6a4c30,#3e2b18 55%,#241810);
   box-shadow:0 12px 24px -10px #000, inset 0 2px 0 #7d5a38, inset 0 -2px 4px rgba(0,0,0,.5);
 }
 .shelf-label{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:#8a6a44;margin:0 0 2px 4px;text-transform:uppercase}
 .spine{
-  width:34px;border-radius:2px 2px 0 0;cursor:pointer;position:relative;
+  width:34px;flex:0 0 auto;border-radius:2px 2px 0 0;cursor:pointer;position:relative;
   display:flex;align-items:flex-end;justify-content:center;padding-bottom:12px;
   box-shadow:inset -6px 0 12px rgba(0,0,0,.4), inset 4px 0 6px rgba(255,255,255,.12), 0 -3px 12px -4px #000;
   transition:transform .22s cubic-bezier(.2,.8,.3,1);transform-origin:bottom center;
 }
 .spine:hover{transform:translateY(-14px) rotate(-1.5deg);z-index:5}
+/* invisible pad: keeps the pointer inside the book while it lifts and tilts,
+   otherwise a hovered spine slides out from under the cursor and judders */
+.spine::before{content:"";position:absolute;left:-4px;right:-4px;top:-4px;bottom:-18px;z-index:1}
 .spine span{
   writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;overflow:hidden;
   font-size:11.5px;font-weight:600;letter-spacing:.02em;max-height:calc(100% - 18px);
@@ -693,9 +702,31 @@ body.no-vinyl .room-vinyl{display:none}
 .tag{color:var(--cyan);cursor:pointer}
 
 /* ═══════════ 6. THE BOARD ═══════════ */
-.board-tools{display:flex;gap:8px;padding:12px 16px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+/* the tool bar floats OVER the board, so opening it never shifts anything */
+.board-tools{
+  position:absolute;top:0;left:0;right:0;z-index:60;
+  background:linear-gradient(180deg,var(--panel),var(--panel-2));
+  border-bottom:1px solid var(--line);
+  box-shadow:0 20px 36px -30px #000;
+}
+.bt-bar{display:flex;align-items:center;gap:12px;height:37px;padding:0 8px 0 16px}
+.bt-title{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);flex:none}
+.bt-hint{flex:1;min-width:0;font-size:11.5px;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bt-toggle{
+  flex:none;width:28px;height:28px;border-radius:7px;border:1px solid transparent;
+  background:none;color:var(--dim);cursor:pointer;display:grid;place-items:center;
+}
+.bt-toggle:hover{background:rgba(255,255,255,.05);border-color:var(--line);color:var(--ink)}
+.bt-toggle svg{transition:transform .26s cubic-bezier(.2,.8,.3,1)}
+.board-tools.open .bt-toggle svg{transform:rotate(180deg)}
+.bt-body{
+  display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+  padding:0 16px;max-height:0;opacity:0;overflow:hidden;
+  transition:max-height .3s cubic-bezier(.2,.8,.3,1),opacity .2s ease,padding .3s ease;
+}
+.board-tools.open .bt-body{max-height:200px;opacity:1;padding:0 16px 13px}
 .board{
-  position:absolute;top:53px;left:0;right:0;bottom:0;overflow:hidden;
+  position:absolute;top:38px;left:0;right:0;bottom:0;overflow:hidden;
   background:#0f1720;
 }
 .board::before{
@@ -723,11 +754,12 @@ body.no-vinyl .room-vinyl{display:none}
 .board.vb-blurred{filter:blur(8px) brightness(.5);transition:filter .28s ease;pointer-events:none}
 .board{transition:filter .28s ease}
 
-/* overlay covers exactly the board area (board starts at top:53px) */
+/* overlay covers the whole window — clicking anywhere but the photo closes it */
 .vb-focus{
-  position:absolute;top:53px;left:0;right:0;bottom:0;z-index:200;
+  position:fixed;inset:0;z-index:200;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:12px;padding:26px;
+  gap:12px;padding:34px 26px 26px;
+  background:rgba(6,9,13,.55);cursor:zoom-out;
   opacity:0;transition:opacity .28s ease;
 }
 .vb-focus.in{opacity:1}
@@ -740,7 +772,7 @@ body.no-vinyl .room-vinyl{display:none}
 .vb-focus.in .vb-focus-img{transform:scale(1);opacity:1}
 .vb-focus.out .vb-focus-img{transform:scale(.9);opacity:0}
 .vb-focus-img img{
-  max-height:100%;max-width:100%;object-fit:contain;border-radius:8px;
+  max-height:100%;max-width:100%;object-fit:contain;border-radius:8px;cursor:default;
   box-shadow:0 40px 90px -30px #000, 0 0 0 1px rgba(255,255,255,.08);
 }
 /* one-line note bar */
@@ -751,7 +783,7 @@ body.no-vinyl .room-vinyl{display:none}
 }
 .vb-focus.in .vb-focus-note{transform:none;opacity:1}
 .vb-focus-ta{
-  width:100%;background:rgba(20,26,34,.92);border:1px solid var(--line);
+  width:100%;cursor:text;background:rgba(20,26,34,.92);border:1px solid var(--line);
   border-radius:10px;padding:11px 16px;color:var(--ink);
   font-family:var(--read);font-size:15.5px;outline:none;
   box-shadow:0 16px 40px -24px #000;backdrop-filter:blur(4px);
