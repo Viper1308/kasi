@@ -1,6 +1,6 @@
 /* ══════════════ THE RIG — login, desk scene, view switching ══════════════ */
 (() => {
-  const VIEWS = ['profile', 'web', 'books', 'calendar', 'thoughts', 'vision'];
+  const VIEWS = ['profile', 'web', 'books', 'stacks', 'calendar', 'thoughts', 'vision'];
   let current = null;
   let inited = false;
 
@@ -164,6 +164,8 @@
     if (v === 'web') Web.draw();
     if (v === 'calendar') Cal.grid();
     if (v === 'profile') Profile.render();
+    if (v === 'stacks') Stacks.refresh();
+    if (v === 'vision') Board.refresh();
   }
 
   /* ──────── CLOCK ──────── */
@@ -349,7 +351,8 @@
       });
     }
 
-    Profile.render(); Web.init(); Books.init(); Cal.init(); Margin.init(); Board.init();
+    Mobile.init();
+    Profile.render(); Web.init(); Books.init(); Stacks.init(); Cal.init(); Margin.init(); Board.init();
     clock(); setInterval(clock, 20000);
     gauge(); setInterval(gauge, 8000);
 
@@ -380,7 +383,7 @@
         return;
       }
       const n = parseInt(e.key, 10);
-      if (n >= 1 && n <= 6) openView(VIEWS[n - 1]);
+      if (n >= 1 && n <= VIEWS.length) openView(VIEWS[n - 1]);
     });
 
     // if there's a saved view, jump straight in on reload
