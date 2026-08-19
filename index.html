@@ -1,522 +1,136 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0e0a12">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="mobile-web-app-capable" content="yes">
-<title>Polymath OS</title>
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#08060f">
+<title>CODEX</title>
+<meta name="description" content="A personal library of what mastery of a field actually contains.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/atlas.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/codex.css">
 </head>
 <body>
 
-<!-- ═══════════ LOGIN GATE ═══════════ -->
-<div id="loginGate" class="login-gate">
-  <div class="login-room">
-    <div class="login-desk">
-      <div class="login-lamp"></div>
-      <div class="login-box">
-        <div class="login-screen-frame">
-          <div class="login-screen-inner">
-            <div class="login-logo">POLYMATH<i>OS</i></div>
-            <p class="login-sub" id="loginSub">private terminal</p>
-            <input type="text" id="loginUser" class="login-inp" placeholder="user" autocomplete="username" autofocus>
-            <input type="password" id="loginPass" class="login-inp" placeholder="password" autocomplete="current-password">
-            <button class="login-btn" id="loginBtn">Log in</button>
-            <p class="login-err" id="loginErr"></p>
-            <p class="login-switch" id="loginSwitch" hidden></p>
-          </div>
-        </div>
-        <div class="login-stand"></div>
-        <div class="login-base"></div>
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M9 8h6M9 12h4"/></svg>
+      </div>
+      <div>
+        <div class="brand-name">CODEX</div>
+        <div class="brand-sub" id="brandSub">loading</div>
       </div>
     </div>
-  </div>
-</div>
-
-<!-- ═══════════ MAIN APP ═══════════ -->
-<div id="app" class="app hidden">
-
-  <!-- ── THE DESK (home) ── -->
-  <div id="deskView" class="desk-scene">
-
-    <!-- atmospheric backdrop -->
-    <div class="room-sky"></div>
-    <div class="room-stars" id="roomStars"></div>
-    <div class="room-window">
-      <div class="win-frame">
-        <div class="win-glass">
-          <div class="win-moon"></div>
-          <div class="win-cloud c1"></div>
-          <div class="win-cloud c2"></div>
-          <div class="win-rain" id="winRain"></div>
-        </div>
-        <div class="win-mullion-v"></div>
-        <div class="win-mullion-h"></div>
-      </div>
-      <div class="win-sill"></div>
-    </div>
-
-    <div class="room-wall"></div>
-    <div class="dust" id="dust"></div>
-
-    <!-- string lights across the top -->
-    <div class="string-lights" id="stringLights"></div>
-
-    <!-- desk lamp with warm pool of light -->
-    <div class="room-lamp">
-      <div class="lamp-arm"></div>
-      <div class="lamp-head"></div>
-    </div>
-    <div class="lamp-pool"></div>
-
-    <!-- plant -->
-    <div class="room-plant">
-      <div class="plant-pot"></div>
-      <div class="plant-leaf l1"></div>
-      <div class="plant-leaf l2"></div>
-      <div class="plant-leaf l3"></div>
-      <div class="plant-leaf l4"></div>
-      <div class="plant-leaf l5"></div>
-      <div class="plant-leaf l6"></div>
-    </div>
-
-    <!-- clock -->
-    <div class="room-clock" id="deskClock">19:45</div>
-
-    <!-- vinyl record spinning -->
-    <div class="room-vinyl">
-      <div class="vinyl-disc"></div>
-      <div class="vinyl-note n1">♪</div>
-      <div class="vinyl-note n2">♫</div>
-    </div>
-
-    <!-- settings gear -->
-    <button class="settings-gear" id="settingsGear" title="Settings">
-      <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 8a4 4 0 100 8 4 4 0 000-8zM12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
-    </button>
-
-    <!-- 3×2 monitor grid -->
-    <div class="monitor-rig">
-      <div class="mon-row top">
-        <button class="monitor left" data-view="profile" id="mon-profile">
-          <div class="mon-bezel">
-            <div class="mon-screen">
-              <div class="mon-label">THE RECORD</div>
-              <div class="mon-desc">your CV</div>
-              <svg class="mon-icon" viewBox="0 0 40 40"><circle cx="20" cy="14" r="7"/><path d="M8 36c0-8 5-13 12-13s12 5 12 13"/></svg>
-            </div>
-          </div>
-          <div class="mon-neck"></div>
-        </button>
-        <button class="monitor center" data-view="web" id="mon-web">
-          <div class="mon-bezel">
-            <div class="mon-screen">
-              <div class="mon-label">THE WEB</div>
-              <div class="mon-desc">78 strands</div>
-              <svg class="mon-icon" viewBox="0 0 40 40"><circle cx="20" cy="20" r="12" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="20" x2="32" y2="20" stroke="currentColor" stroke-width="1"/><line x1="20" y1="8" x2="20" y2="32" stroke="currentColor" stroke-width="1"/><line x1="11" y1="11" x2="29" y2="29" stroke="currentColor" stroke-width="1"/></svg>
-            </div>
-          </div>
-          <div class="mon-neck"></div>
-        </button>
-        <button class="monitor right" data-view="books" id="mon-books">
-          <div class="mon-bezel">
-            <div class="mon-screen">
-              <div class="mon-label">THE SHELF</div>
-              <div class="mon-desc">book logger</div>
-              <svg class="mon-icon" viewBox="0 0 40 40"><rect x="8" y="8" width="5" height="24" rx="1"/><rect x="15" y="12" width="4" height="20" rx="1"/><rect x="21" y="6" width="5" height="26" rx="1"/><rect x="28" y="10" width="4" height="22" rx="1"/></svg>
-            </div>
-          </div>
-          <div class="mon-neck"></div>
-        </button>
-        <button class="monitor right" data-view="stacks" id="mon-stacks">
-          <div class="mon-bezel">
-            <div class="mon-screen">
-              <div class="mon-label">THE STACKS</div>
-              <div class="mon-desc">projects, piled</div>
-              <svg class="mon-icon" viewBox="0 0 40 40"><rect x="7" y="25" width="26" height="6" rx="1.5"/><rect x="9" y="18" width="22" height="6" rx="1.5"/><rect x="11" y="11" width="18" height="6" rx="1.5"/><rect x="13" y="5" width="14" height="5" rx="1.5"/></svg>
-            </div>
-          </div>
-          <div class="mon-neck"></div>
-        </button>
-      </div>
-      <div class="mon-row bottom">
-        <button class="monitor left" data-view="calendar" id="mon-calendar">
-          <div class="mon-bezel">
-            <div class="mon-screen">
-              <div class="mon-label">THE CALENDAR</div>
-              <div class="mon-desc">plan it</div>
-              <svg class="mon-icon" viewBox="0 0 40 40"><rect x="8" y="10" width="24" height="22" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="16" x2="32" y2="16" stroke="currentColor" stroke-width="1.5"/><line x1="15" y1="8" x2="15" y2="12" stroke="currentColor" stroke-width="1.5"/><line x1="25" y1="8" x2="25" y2="12" stroke="currentColor" stroke-width="1.5"/></svg>
-            </div>
-          </div>
-          <div class="mon-neck"></div>
-        </button>
-        <button class="monitor center" data-view="thoughts" id="mon-thoughts">
-          <div class="mon-bezel">
-            <div class="mon-screen">
-              <div class="mon-label">THE MARGIN</div>
-              <div class="mon-desc">thoughts & quotes</div>
-              <svg class="mon-icon" viewBox="0 0 40 40"><line x1="10" y1="12" x2="30" y2="12" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="18" x2="26" y2="18" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="24" x2="22" y2="24" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="30" x2="18" y2="30" stroke="currentColor" stroke-width="1.5"/></svg>
-            </div>
-          </div>
-          <div class="mon-neck"></div>
-        </button>
-        <button class="monitor right" data-view="vision" id="mon-vision">
-          <div class="mon-bezel">
-            <div class="mon-screen">
-              <div class="mon-label">THE BOARD</div>
-              <div class="mon-desc">vision board</div>
-              <svg class="mon-icon" viewBox="0 0 40 40"><rect x="7" y="8" width="14" height="10" rx="1.5"/><rect x="23" y="8" width="10" height="15" rx="1.5"/><rect x="7" y="20" width="10" height="12" rx="1.5"/><rect x="19" y="25" width="14" height="7" rx="1.5"/></svg>
-            </div>
-          </div>
-          <div class="mon-neck"></div>
-        </button>
-        <button class="monitor right" data-view="atlas" id="mon-atlas">
-          <div class="mon-bezel">
-            <div class="mon-screen">
-              <div class="mon-label">THE ATLAS</div>
-              <div class="mon-desc">every subject, written out</div>
-              <svg class="mon-icon" viewBox="0 0 40 40"><path d="M20 9c-4-2.5-8-2.5-12 0v22c4-2.5 8-2.5 12 0 4-2.5 8-2.5 12 0V9c-4-2.5-8-2.5-12 0z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 9v22" stroke="currentColor" stroke-width="2"/></svg>
-            </div>
-          </div>
-          <div class="mon-neck"></div>
-        </button>
-      </div>
-    </div>
-
-    <!-- desk surface -->
-    <div class="desk-surface">
-      <div class="desk-keyboard">
-        <div class="kb-glow"></div>
-      </div>
-      <div class="desk-mouse"></div>
-      <div class="desk-mug">
-        <div class="mug-steam s1"></div>
-        <div class="mug-steam s2"></div>
-        <div class="mug-steam s3"></div>
-      </div>
-      <div class="desk-cup"></div>
-      <div class="desk-stack">
-        <div class="sbook sb1"></div>
-        <div class="sbook sb2"></div>
-        <div class="sbook sb3"></div>
-      </div>
-    </div>
-    <div class="desk-under">
-      <div class="desk-pc">
-        <div class="pc-glass"></div>
-        <div class="pc-fan"></div>
-        <div class="pc-led"></div>
-      </div>
-      <div class="desk-books">
-        <div class="dbook b1"></div>
-        <div class="dbook b2"></div>
-        <div class="dbook b3"></div>
-        <div class="dbook b4"></div>
-        <div class="dbook b5"></div>
-      </div>
-    </div>
-    <div class="desk-floor"></div>
-  </div>
-
-  <!-- ── SETTINGS PANEL ── -->
-  <div id="settingsPanel" class="settings-panel hidden">
-    <div class="settings-backdrop" id="settingsBackdrop"></div>
-    <div class="settings-card">
-      <button class="settings-close" id="settingsClose">✕</button>
-      <h2 class="settings-title">Settings</h2>
-
-      <div class="settings-block">
-        <h4>Theme</h4>
-        <p class="settings-desc">Pick the mood of the room.</p>
-        <div class="theme-grid" id="themeGrid"></div>
-      </div>
-
-      <div class="settings-block">
-        <h4>Ambience</h4>
-        <label class="settings-toggle"><input type="checkbox" id="setRain" checked><span>Rain on the window</span></label>
-        <label class="settings-toggle"><input type="checkbox" id="setDust" checked><span>Drifting dust motes</span></label>
-        <label class="settings-toggle"><input type="checkbox" id="setLights" checked><span>String lights</span></label>
-        <label class="settings-toggle"><input type="checkbox" id="setVinyl" checked><span>Spinning vinyl</span></label>
-      </div>
-
-      <div class="settings-block">
-        <h4>Data</h4>
-        <div class="settings-row">
-          <button class="btn ghost" id="setExport">Back up everything</button>
-          <label class="btn ghost">Restore<input type="file" id="setImport" accept=".json" hidden></label>
-        </div>
-        <button class="link-btn danger" id="setLogout" style="margin-top:10px">Log out</button>
-        <p class="settings-desc" id="setGauge"></p>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── FULLSCREEN VIEW (when a monitor is "active") ── -->
-  <div id="fullView" class="full-view hidden">
-    <div class="full-top-bar">
-      <button class="back-btn" id="backBtn" title="Back to desk (Esc)">
-        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
-        <span>Desk</span>
+    <nav class="nav">
+      <button class="pill" data-go="dashboard">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        Dashboard
       </button>
-      <div class="tab-row" id="tabRow">
-        <button class="tab" data-view="profile">The Record</button>
-        <button class="tab" data-view="web">The Web</button>
-        <button class="tab" data-view="books">The Shelf</button>
-        <button class="tab" data-view="stacks">The Stacks</button>
-        <button class="tab" data-view="calendar">Calendar</button>
-        <button class="tab" data-view="thoughts">Margin</button>
-        <button class="tab" data-view="vision">Board</button>
-        <button class="tab" data-view="atlas">The Atlas</button>
-      </div>
-      <div class="top-right">
-        <span class="sync-dot" id="syncDot" title="Sync status" hidden></span>
-        <span class="top-clock" id="topClock"></span>
-        <button class="top-action" id="topExport" title="Back up data">💾</button>
-        <label class="top-action" title="Restore backup">📂<input type="file" id="fileImport" accept=".json" hidden></label>
-        <span class="storage-gauge" id="gauge"></span>
-      </div>
-    </div>
-    <div class="full-screen-wrap">
-      <div class="full-screen" id="screen">
-
-        <!-- ══ THE RECORD ══ -->
-        <section class="view" id="view-profile">
-          <div class="record">
-            <div class="record-id" id="idCard"></div>
-            <div class="record-body" id="recordBody"></div>
-          </div>
-        </section>
-
-        <!-- ══ THE WEB ══ -->
-        <section class="view" id="view-web">
-          <div class="web-wrap">
-            <div class="web-tools">
-              <button class="tool" id="wLink" title="Drag from one node to another to draw a strand">Draw strand</button>
-              <button class="tool" id="wAddSubject">Add subject</button>
-              <button class="tool" id="wReset" title="Return every node to the ring">Re-ring</button>
-              <label class="tool switch"><input type="checkbox" id="wAllStrands" checked><span>All strands</span></label>
-              <span class="tool-hint" id="wHint">Click a strand to open it. Drag a node to move it.</span>
-            </div>
-            <svg id="webSvg" class="web-svg"></svg>
-            <aside class="web-panel" id="webPanel" hidden></aside>
-          </div>
-        </section>
-
-        <!-- ══ THE SHELF ══ -->
-        <section class="view" id="view-books">
-          <div class="shelf-head">
-            <input id="bkTitle" class="inp" placeholder="Title">
-            <input id="bkAuthor" class="inp" placeholder="Author">
-            <select id="bkStatus" class="inp narrow">
-              <option value="reading">Reading</option>
-              <option value="read">Finished</option>
-              <option value="want">Want to read</option>
-            </select>
-            <button class="btn" id="bkAdd">Shelve it</button>
-            <span class="shelf-sep"></span>
-            <label class="file-btn">Import list<input type="file" id="bkImport" accept=".csv,.xlsx,.xls,.tsv,.txt" hidden></label>
-            <button class="link-btn tiny" id="bkTemplate" title="Download a blank CSV in the right format">Template</button>
-            <span class="tool-hint" id="bkHint">Covers and spine colours are pulled from Open Library.</span>
-          </div>
-          <div class="shelves" id="shelves"></div>
-          <div class="book-stage" id="bookStage" hidden></div>
-        </section>
-
-        <!-- ══ THE STACKS ══ -->
-        <section class="view" id="view-stacks">
-          <div class="stk-wrap">
-            <div class="stk-tools">
-              <button class="tool" id="stkAdd">New stack</button>
-              <button class="tool" id="stkTidy" title="Line every pile up on the floor">Tidy floor</button>
-              <button class="tool" id="stkFit">Fit view</button>
-              <span class="stk-zoomer">
-                <button class="tool tiny" id="stkOut">−</button>
-                <b id="stkZoom">100%</b>
-                <button class="tool tiny" id="stkIn">+</button>
-              </span>
-              <span class="tool-hint" id="stkHint">Drag the floor to walk around · scroll or pinch to zoom · drag a pile to move it · tap a pile to look at it side-on</span>
-            </div>
-            <div class="stk-room" id="stkRoom">
-              <div class="stk-floor" id="stkFloor">
-                <div class="stk-rug"></div>
-              </div>
-              <div class="stk-empty" id="stkEmpty" hidden>
-                <b>The floor is bare.</b>
-                <span>Make a stack. The top book is step one — everything under it is what comes next.</span>
-              </div>
-            </div>
-            <div class="stk-side" id="stkSide" hidden></div>
-          </div>
-        </section>
-
-        <!-- ══ THE CALENDAR ══ -->
-        <section class="view" id="view-calendar">
-          <div class="cal-rig">
-            <aside class="strip left">
-              <div class="strip-block">
-                <h4>View</h4>
-                <div class="seg" id="calViews">
-                  <button data-v="month" class="on">Month</button>
-                  <button data-v="week">Week</button>
-                  <button data-v="day">Day</button>
-                  <button data-v="year">Year</button>
-                </div>
-              </div>
-              <div class="strip-block">
-                <h4>Calendars</h4>
-                <ul class="cal-list" id="calList"></ul>
-                <div class="row-add">
-                  <input id="calNewName" class="inp tiny" placeholder="New calendar">
-                  <button class="btn tiny" id="calAdd">+</button>
-                </div>
-              </div>
-              <div class="strip-block">
-                <h4>Google Calendar</h4>
-                <label class="file-btn">Import .ics<input type="file" id="icsFile" accept=".ics" hidden></label>
-                <p class="micro">Export from Google Calendar → Settings → Import/Export, then drop the file here.</p>
-              </div>
-            </aside>
-            <div class="cal-core">
-              <div class="cal-head">
-                <button class="nav-btn" id="calPrev">‹</button>
-                <h3 id="calTitle"></h3>
-                <button class="nav-btn" id="calNext">›</button>
-                <button class="nav-btn today" id="calToday">Today</button>
-              </div>
-              <div class="cal-square" id="calSquare"></div>
-            </div>
-            <aside class="strip right">
-              <div class="strip-block">
-                <h4>Workspace</h4>
-                <textarea id="wsInput" class="inp area" rows="2" placeholder="Task or note… (Enter to log)"></textarea>
-                <div class="ws-meta">
-                  <select id="wsCal" class="inp tiny"></select>
-                  <select id="wsKind" class="inp tiny"><option value="task">Task</option><option value="note">Note</option></select>
-                </div>
-              </div>
-              <div class="strip-block grow">
-                <h4>Unscheduled <span class="count" id="wsCount">0</span></h4>
-                <ul class="ws-list" id="wsList"></ul>
-                <p class="micro">Drag an item onto a day to schedule it.</p>
-              </div>
-            </aside>
-          </div>
-        </section>
-
-        <!-- ══ THE MARGIN ══ -->
-        <section class="view" id="view-thoughts">
-          <div class="margin-head">
-            <textarea id="thInput" class="inp area big" rows="2" placeholder="A thought, half-formed. ⌘/Ctrl+Enter to keep it."></textarea>
-            <div class="margin-controls">
-              <div class="seg" id="thKind"><button data-k="thought" class="on">Thought</button><button data-k="quote">Quote</button></div>
-              <input id="thWho" class="inp" placeholder="Said by…" hidden>
-              <input id="thSearch" class="inp" placeholder="Search / #tag">
-            </div>
-          </div>
-          <div class="margin-grid" id="thList"></div>
-        </section>
-
-        <!-- ══ THE BOARD ══ -->
-        <!-- ══ THE ATLAS ══ -->
-        <section class="view" id="view-atlas">
-          <div class="atl-wrap">
-            <aside class="atl-index" id="atlIndex"></aside>
-            <div class="atl-read" id="atlRead"></div>
-            <div class="atl-queue" id="atlQueue" hidden>
-              <i class="spin"></i><span id="atlQueueTxt">writing…</span>
-              <button class="tool tiny" id="atlStop">stop after this one</button>
-            </div>
-            <div class="atl-scrim" id="atlModal" hidden></div>
-          </div>
-        </section>
-
-        <section class="view" id="view-vision">
-          <div class="vb-tabbar">
-            <div class="vb-tabs" id="vbTabList"></div>
-            <button class="vb-tabadd" id="vbTabAdd" title="New board">+</button>
-          </div>
-          <div class="board-tools" id="boardTools">
-            <div class="bt-bar">
-              <span class="bt-title" id="vbBoardName">Board</span>
-              <span class="bt-hint">Drag a box to select · shift-click to add · ⌘/Ctrl+C then ⌘/Ctrl+V keeps the arrangement · space-drag to pan</span>
-              <span class="bt-sel" id="vbSelCount"></span>
-              <button class="bt-toggle" id="vbToolsToggle" aria-expanded="false" title="Show tools">
-                <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
-            </div>
-            <div class="bt-body">
-              <div class="bt-group">
-                <label class="file-btn">Add pictures<input type="file" id="vbFile" accept="image/*" multiple hidden></label>
-                <button class="btn ghost" id="vbNote">Add note</button>
-                <button class="btn ghost" id="vbBgBtn">Background…</button>
-              </div>
-              <div class="bt-group">
-                <button class="btn ghost" id="vbCopy" title="⌘/Ctrl+C">Copy</button>
-                <button class="btn ghost" id="vbPaste" title="⌘/Ctrl+V">Paste</button>
-                <button class="btn ghost" id="vbDupe" title="⌘/Ctrl+D">Duplicate</button>
-                <button class="btn ghost" id="vbSelAll">Select all</button>
-              </div>
-              <div class="bt-group" id="vbAlign">
-                <span class="bt-glabel">Align</span>
-                <button class="icn" data-a="left" title="Align left">⌐</button>
-                <button class="icn" data-a="cx" title="Centre across">┼</button>
-                <button class="icn" data-a="right" title="Align right">¬</button>
-                <button class="icn" data-a="top" title="Align top">⌃</button>
-                <button class="icn" data-a="cy" title="Centre down">≡</button>
-                <button class="icn" data-a="bottom" title="Align bottom">⌄</button>
-                <button class="icn wide" data-a="row" title="Lay out in a row">Row</button>
-                <button class="icn wide" data-a="grid" title="Lay out in a grid">Grid</button>
-              </div>
-              <div class="bt-group">
-                <button class="btn ghost" id="vbFront">Bring to front</button>
-                <button class="btn ghost danger" id="vbDel">Delete</button>
-              </div>
-              <div class="bt-group">
-                <button class="icn" id="vbOut">−</button>
-                <b class="bt-zoom" id="vbZoom">100%</b>
-                <button class="icn" id="vbIn">+</button>
-                <button class="btn ghost" id="vbFit">Fit</button>
-              </div>
-            </div>
-          </div>
-          <div class="board" id="board" tabindex="0">
-            <div class="board-plane" id="boardPlane"></div>
-            <div class="marquee" id="vbMarquee" hidden></div>
-            <div class="board-empty" id="vbEmpty">Nothing pinned yet. Add a picture, or paste one straight in.</div>
-          </div>
-          <div class="vb-bgpanel hidden" id="vbBgPanel"></div>
-        </section>
-
-      </div>
-    </div>
+      <button class="pill" data-go="atlas">
+        <svg viewBox="0 0 24 24"><path d="M12 6c-3-2-6-2-8 0v13c2-2 5-2 8 0 3-2 6-2 8 0V6c-2-2-5-2-8 0z"/><path d="M12 6v13"/></svg>
+        Atlas
+      </button>
+      <button class="pill" data-go="oracle">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg>
+        Oracle <span class="soon">soon</span>
+      </button>
+      <button class="pill" id="btnBackup" title="Download everything as a JSON file">
+        <svg viewBox="0 0 24 24"><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></svg>
+      </button>
+      <label class="pill" title="Restore from a backup file" style="cursor:pointer">
+        <svg viewBox="0 0 24 24"><path d="M12 21V9M7 13l5-5 5 5M4 4h16"/></svg>
+        <input type="file" id="fileRestore" accept="application/json" hidden>
+      </label>
+    </nav>
   </div>
+</header>
 
-  <div class="toast" id="toast" hidden></div>
-</div>
+<main class="wrap">
 
+  <!-- ══════════ DASHBOARD ══════════ -->
+  <section class="screen" id="screen-dashboard">
+    <div class="filters" id="dashFilters"></div>
+    <div class="kpis" id="dashKpis"></div>
+
+    <div class="grid g-7-5">
+      <div class="card">
+        <div class="card-h"><div class="card-t">Mastery Overview</div>
+          <div class="card-x"><span class="chip">cumulative</span></div></div>
+        <div class="card-b chart-wrap" id="dashArea"></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div class="card-t">Subject Distribution</div></div>
+        <div class="card-b" id="dashDonut"></div>
+      </div>
+    </div>
+
+    <div class="grid g-5-7">
+      <div class="card">
+        <div class="card-h"><div class="card-t">Subjects</div>
+          <div class="card-x"><span class="chip">by coverage</span></div></div>
+        <div class="card-b" id="dashBars"></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div class="card-t" id="dashBarsTitle">Mastery by Subject</div></div>
+        <div class="card-b" id="dashVBars"></div>
+      </div>
+    </div>
+
+    <div class="grid g-6-6">
+      <div class="card">
+        <div class="card-h"><div class="card-t">Recent Activity</div></div>
+        <div class="card-b" id="dashActivity"></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div class="card-t">Oracle</div>
+          <div class="card-x"><span class="chip" style="color:var(--amber)">coming soon</span></div></div>
+        <div class="card-b">
+          <div class="empty" style="text-align:left;padding:6px 0">
+            <b>The assistant layer is not live yet.</b>
+            When it is, it will answer against your own library rather than from nowhere — and examine you
+            on what you claim to have mastered. The entry writer behind it is already built and dormant.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ ATLAS ══════════ -->
+  <section class="screen" id="screen-atlas">
+    <div class="sub-tabs" id="atlasTabs"></div>
+    <div class="atlas" id="atlasGrid">
+      <aside class="card atlas-idx" id="atlasIdx"></aside>
+      <div class="card reader" id="atlasRead"></div>
+    </div>
+  </section>
+
+  <!-- ══════════ ORACLE ══════════ -->
+  <section class="screen" id="screen-oracle">
+    <div class="card oracle" id="oracleBody"></div>
+  </section>
+
+</main>
+
+<div class="toast" id="toast" hidden></div>
+
+<!-- config first, then data, then code -->
 <script src="js/config.js"></script>
-<script src="js/store.js"></script>
-<script src="js/sync.js"></script>
-<script src="js/themes.js"></script>
-<script src="js/gestures.js"></script>
-<script src="js/connections.js"></script>
-<script src="js/profile.js"></script>
-<script src="js/web.js"></script>
-<script src="js/books.js"></script>
-<script src="js/calendar.js"></script>
-<script src="js/thoughts.js"></script>
-<script src="js/stacks.js"></script>
-<script src="js/vision.js"></script>
-<script src="js/atlas-data.js"></script>
+<script src="data/economics.js"></script>
+<script src="data/finance.js"></script>
+<script src="data/law.js"></script>
+<script src="data/mathematics.js"></script>
+<script src="data/physics.js"></script>
+<script src="data/business.js"></script>
+<script src="data/politics.js"></script>
+<script src="data/computer-science.js"></script>
+<script src="js/core.js"></script>
 <script src="js/atlas.js"></script>
-<script src="js/mobile.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/oracle.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
