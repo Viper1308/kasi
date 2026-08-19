@@ -48,12 +48,5 @@ const Margin = (() => {
     document.getElementById('thSearch').oninput = e => { q = e.target.value.trim(); render(); };
     render();
   }
-  // lets other screens (the Atlas) file a note without reaching into Store
-  function push(text, who, k) {
-    list.unshift({ id: uid(), text, kind: k || 'thought', who: who || '', at: Date.now() });
-    save(); render();
-    if (typeof Profile !== 'undefined' && Profile.render) Profile.render();
-  }
-
-  return { init, render, push };
+  return { init, render };
 })();

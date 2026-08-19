@@ -164,7 +164,6 @@ const Sync = (() => {
 
   return {
     enabled, init, on,
-    client: () => sb,        // the Atlas reads/writes its own table through this
     signIn, signUp, signOut, currentUser,
     pullAll, queuePush, flush, del,
     putImg, getImg, delImg, listImgIds,
