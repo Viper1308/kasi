@@ -268,6 +268,14 @@ const Web = (() => {
     const p = shell(esc(s.label), 'Subject');
     const links = subjects.filter(x => x.id !== s.id).length;
     sec(p, 'Position', `<div class="wp-brief">${links} strands run from here. Click any highlighted strand to open it.</div>`);
+    const atl = el('button', 'btn tiny', 'Open in the Atlas');
+    atl.style.margin = '4px 0 14px';
+    atl.onclick = () => {
+      if (typeof Atlas !== 'undefined' && Atlas.openSubject(s.id)) {
+        document.querySelector('.tab[data-view="atlas"]').click();
+      }
+    };
+    p.appendChild(atl);
     const t = sec(p, 'Topics', `<ul class="wp-list" id="tlist">${(s.topics || []).map(x => `<li>${esc(x.label)}</li>`).join('') || '<li style="color:var(--faint)">None yet.</li>'}</ul>
       <div class="topic-add"><input class="inp tiny" id="tnew" placeholder="Add a topic"><button class="btn tiny" id="tadd">Add</button></div>`);
     const go = () => {

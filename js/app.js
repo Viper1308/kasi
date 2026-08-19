@@ -1,6 +1,6 @@
 /* ══════════════ THE RIG — login, desk scene, view switching ══════════════ */
 (() => {
-  const VIEWS = ['profile', 'web', 'books', 'stacks', 'calendar', 'thoughts', 'vision'];
+  const VIEWS = ['profile', 'web', 'books', 'stacks', 'calendar', 'thoughts', 'vision', 'atlas'];
   let current = null;
   let inited = false;
 
@@ -166,6 +166,7 @@
     if (v === 'profile') Profile.render();
     if (v === 'stacks') Stacks.refresh();
     if (v === 'vision') Board.refresh();
+    if (v === 'atlas') Atlas.refresh();
   }
 
   /* ──────── CLOCK ──────── */

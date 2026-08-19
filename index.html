@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/atlas.css">
 </head>
 <body>
 
@@ -176,6 +177,16 @@
           </div>
           <div class="mon-neck"></div>
         </button>
+        <button class="monitor right" data-view="atlas" id="mon-atlas">
+          <div class="mon-bezel">
+            <div class="mon-screen">
+              <div class="mon-label">THE ATLAS</div>
+              <div class="mon-desc">every subject, written out</div>
+              <svg class="mon-icon" viewBox="0 0 40 40"><path d="M20 9c-4-2.5-8-2.5-12 0v22c4-2.5 8-2.5 12 0 4-2.5 8-2.5 12 0V9c-4-2.5-8-2.5-12 0z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 9v22" stroke="currentColor" stroke-width="2"/></svg>
+            </div>
+          </div>
+          <div class="mon-neck"></div>
+        </button>
       </div>
     </div>
 
@@ -262,6 +273,7 @@
         <button class="tab" data-view="calendar">Calendar</button>
         <button class="tab" data-view="thoughts">Margin</button>
         <button class="tab" data-view="vision">Board</button>
+        <button class="tab" data-view="atlas">The Atlas</button>
       </div>
       <div class="top-right">
         <span class="sync-dot" id="syncDot" title="Sync status" hidden></span>
@@ -412,6 +424,19 @@
         </section>
 
         <!-- ══ THE BOARD ══ -->
+        <!-- ══ THE ATLAS ══ -->
+        <section class="view" id="view-atlas">
+          <div class="atl-wrap">
+            <aside class="atl-index" id="atlIndex"></aside>
+            <div class="atl-read" id="atlRead"></div>
+            <div class="atl-queue" id="atlQueue" hidden>
+              <i class="spin"></i><span id="atlQueueTxt">writing…</span>
+              <button class="tool tiny" id="atlStop">stop after this one</button>
+            </div>
+            <div class="atl-scrim" id="atlModal" hidden></div>
+          </div>
+        </section>
+
         <section class="view" id="view-vision">
           <div class="vb-tabbar">
             <div class="vb-tabs" id="vbTabList"></div>
@@ -489,6 +514,8 @@
 <script src="js/thoughts.js"></script>
 <script src="js/stacks.js"></script>
 <script src="js/vision.js"></script>
+<script src="js/atlas-data.js"></script>
+<script src="js/atlas.js"></script>
 <script src="js/mobile.js"></script>
 <script src="js/app.js"></script>
 </body>
