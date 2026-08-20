@@ -26,6 +26,31 @@ const Gallery = (() => {
   function recent(n) { return list.slice(0, n); }
   function all() { return list; }
 
+  /* ---------------- backfill ----------------
+     Pictures pinned or pasted before the Gallery existed never went through add(),
+     so on first run we sweep every board's items (and background) once and copy
+     anything found into the Gallery. A flag stops it from running again. */
+  async function backfillFromBoards() {
+    if (Store.get('kasi.gallery.backfilled', false)) return;
+    const boards = Store.get('vb.boards', []) || [];
+    let added = 0;
+    for (const b of boards) {
+      const items = Store.get('vb.items:' + b.id, []) || [];
+      for (const it of items) {
+        if (it.type !== 'img') continue;
+        const dataUrl = await Store.getImg('vb:' + it.id);
+        if (dataUrl) { add(dataUrl, { boardId: b.id, boardName: b.name, kind: 'pinned' }); added++; }
+      }
+      if (b.bg && b.bg.type === 'image') {
+        const bgUrl = await Store.getImg('vbbg:' + b.id);
+        if (bgUrl) { add(bgUrl, { boardId: b.id, boardName: b.name, kind: 'background' }); added++; }
+      }
+    }
+    Store.set('kasi.gallery.backfilled', true);
+    if (added && typeof Dashboard !== 'undefined') Dashboard.refreshGalleryBits();
+    if (added) toast(`Gallery caught up on ${added} existing picture${added === 1 ? '' : 's'} from the Board.`);
+  }
+
   function remove(id) {
     list = list.filter(r => r.id !== id);
     save();
@@ -87,6 +112,7 @@ const Gallery = (() => {
       if (!document.getElementById('galleryLightbox').classList.contains('hidden')) { closeLightbox(); return; }
       if (!document.getElementById('galleryModal').classList.contains('hidden')) closeModal();
     });
+    backfillFromBoards();
   }
 
   return { init, add, count, recent, all, openModal };

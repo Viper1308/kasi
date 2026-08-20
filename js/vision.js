@@ -279,7 +279,10 @@ const Board = (() => {
         w: rec.w, h: rec.h, z: ++z,
         text: rec.text, note: rec.note
       };
-      if (rec.type === 'img' && rec.img) { imgCache.set(id, rec.img); await Store.putImg('vb:' + id, rec.img); }
+      if (rec.type === 'img' && rec.img) {
+        imgCache.set(id, rec.img); await Store.putImg('vb:' + id, rec.img);
+        if (typeof Gallery !== 'undefined') Gallery.add(rec.img, { boardId: activeId, boardName: active().name, kind: 'pinned' });
+      }
       items.push(it); made.push(id);
     }
     saveItems(); sel = new Set(made); render();
