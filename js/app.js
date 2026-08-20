@@ -145,6 +145,7 @@
     document.getElementById('deskView').classList.remove('hidden');
     document.getElementById('fullView').classList.add('hidden');
     current = null;
+    if (typeof Dashboard !== 'undefined') Dashboard.render();
   }
 
   /* ──────── FULLSCREEN VIEW ──────── */
@@ -215,58 +216,8 @@
     fr.readAsText(file);
   }
 
-  /* ──────── ATMOSPHERE ──────── */
-  function buildAtmosphere() {
-    // stars
-    const stars = document.getElementById('roomStars');
-    if (stars && !stars.children.length) {
-      let h = '';
-      for (let i = 0; i < 60; i++) {
-        h += `<i style="left:${Math.random() * 100}%;top:${Math.random() * 45}%;animation-delay:${Math.random() * 4}s"></i>`;
-      }
-      stars.innerHTML = h;
-    }
-    // rain
-    const rain = document.getElementById('winRain');
-    if (rain && !rain.children.length) {
-      let h = '';
-      for (let i = 0; i < 30; i++) {
-        h += `<i style="left:${Math.random() * 100}%;animation-duration:${.5 + Math.random() * .6}s;animation-delay:${Math.random() * 1.5}s"></i>`;
-      }
-      rain.innerHTML = h;
-    }
-    // dust motes
-    const dust = document.getElementById('dust');
-    if (dust && !dust.children.length) {
-      let h = '';
-      for (let i = 0; i < 22; i++) {
-        const sz = 1 + Math.random() * 2.5;
-        h += `<i style="left:${Math.random() * 100}%;top:${40 + Math.random() * 55}%;width:${sz}px;height:${sz}px;animation-duration:${8 + Math.random() * 10}s;animation-delay:${Math.random() * 8}s"></i>`;
-      }
-      dust.innerHTML = h;
-    }
-    // string lights (SVG swag + bulbs)
-    const sl = document.getElementById('stringLights');
-    if (sl && !sl.children.length) {
-      const W = 1200, n = 14;
-      let path = `M0,8 `, bulbs = '';
-      for (let i = 0; i <= n; i++) {
-        const x = (i / n) * W, y = 8 + Math.sin((i / n) * Math.PI) * 22;
-        path += `L${x},${y} `;
-        if (i < n) {
-          const bx = ((i + .5) / n) * W, by = 8 + Math.sin(((i + .5) / n) * Math.PI) * 22 + 10;
-          const col = ['#e9a13b', '#e0708a', '#5fd3c4', '#9b8cf0'][i % 4];
-          bulbs += `<circle class="bulb" cx="${bx}" cy="${by}" r="4" fill="${col}" style="animation-delay:${i * .2}s"><animate attributeName="opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite" begin="${i * .2}s"/></circle>`;
-          bulbs += `<circle cx="${bx}" cy="${by}" r="8" fill="${col}" opacity="0.15"/>`;
-        }
-      }
-      sl.innerHTML = `<svg viewBox="0 0 ${W} 60" preserveAspectRatio="none"><path d="${path}" stroke="#1a1a1a" stroke-width="1.5" fill="none"/>${bulbs}</svg>`;
-    }
-  }
-
   /* ──────── SETTINGS ──────── */
-  function buildSettings() {
-    // theme grid
+  function paintThemeGrid() {
     const grid = document.getElementById('themeGrid');
     grid.innerHTML = '';
     Themes.list().forEach(t => {
@@ -288,16 +239,24 @@
       };
       grid.appendChild(sw);
     });
+  }
 
-    // ambience toggles
-    const toggles = [['setRain', 'no-rain'], ['setDust', 'no-dust'], ['setLights', 'no-lights'], ['setVinyl', 'no-vinyl']];
-    toggles.forEach(([id, cls]) => {
-      const cb = document.getElementById(id);
-      const saved = Store.get('ui.' + id, true);
-      cb.checked = saved;
-      document.body.classList.toggle(cls, !saved);
-      cb.onchange = () => { document.body.classList.toggle(cls, !cb.checked); Store.set('ui.' + id, cb.checked); };
-    });
+  function wireCustomTheme() {
+    const base = Themes.getCustomBase() || Themes.defaultCustomBase;
+    const map = { ctBg: 'bg', ctPanel: 'panel', ctPrimary: 'primary', ctSecondary: 'secondary', ctInk: 'ink' };
+    Object.entries(map).forEach(([id, key]) => { const inp = document.getElementById(id); if (inp) inp.value = base[key]; });
+    document.getElementById('ctApply').onclick = () => {
+      const b = {};
+      Object.entries(map).forEach(([id, key]) => { b[key] = document.getElementById(id).value; });
+      Themes.applyCustom(b);
+      paintThemeGrid();
+      toast('Custom palette applied.');
+    };
+  }
+
+  function buildSettings() {
+    paintThemeGrid();
+    wireCustomTheme();
 
     document.getElementById('settingsGear').onclick = () => {
       document.getElementById('settingsPanel').classList.remove('hidden');
@@ -336,7 +295,6 @@
   function initApp() {
     inited = true;
     Themes.apply(Themes.current());
-    buildAtmosphere();
     buildSettings();
 
     // sync status dot (only when signed in)
@@ -353,11 +311,12 @@
 
     Mobile.init();
     Profile.render(); Web.init(); Books.init(); Stacks.init(); Cal.init(); Margin.init(); Board.init();
+    Gallery.init(); Dashboard.init();
     clock(); setInterval(clock, 20000);
     gauge(); setInterval(gauge, 8000);
 
-    // desk monitors → open view
-    document.querySelectorAll('.monitor[data-view]').forEach(m => {
+    // dashboard quick-nav → open view
+    document.querySelectorAll('.quick-nav[data-view]').forEach(m => {
       m.onclick = () => openView(m.dataset.view);
     });
 

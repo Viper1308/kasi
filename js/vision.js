@@ -231,6 +231,7 @@ const Board = (() => {
         };
         imgCache.set(id, url);
         Store.putImg('vb:' + id, url).then(() => {
+          if (typeof Gallery !== 'undefined') Gallery.add(url, { boardId: activeId, boardName: active().name, kind: 'pinned' });
           items.push(it); made.push(id); done++;
           if (done === list.length) {
             saveItems(); sel = new Set(made); render();
@@ -471,6 +472,7 @@ const Board = (() => {
       const f = e.target.files[0]; if (!f) return;
       shrink(f, 2200, url => {
         Store.putImg('vbbg:' + b.id, url).then(() => {
+          if (typeof Gallery !== 'undefined') Gallery.add(url, { boardId: b.id, boardName: b.name, kind: 'background' });
           b.bg = { ...b.bg, type: 'image' }; saveBoards(); paintChrome();
           toast('Background set.');
         });

@@ -1,6 +1,8 @@
-# Polymath OS
+# KASI — Knowledge & Areas of Self-Improvement
 
-A private seven-screen dashboard. No accounts, no server, no one else's copy of your data.
+(Formerly Polymath OS — same app, same data, new name and a new home screen.)
+
+A private life-planner + seven-screen dashboard. No accounts, no server, no one else's copy of your data.
 
 **Login:** `admin` / `Timmyboi1!` (offline mode). Set up Supabase below for real accounts + sync across devices.
 
@@ -97,7 +99,7 @@ Excel import loads a small reader library from a CDN the first time — so the v
 
 ## Settings (gear icon, top-right of the desk)
 
-- **Theme** — six dark palettes: Midnight Amber, Deep Forest, Abyssal Blue, Velvet Plum, Ember Rust, Graphite Mono. Changes the whole app instantly and is remembered.
+- **Theme** — six dark palettes: Midnight Amber, Deep Forest, Abyssal Blue, Velvet Plum, Ember Rust, Graphite Mono — plus a **Custom palette** builder (five colour pickers; the rest of the room is derived to match). Changes the whole app instantly and is remembered.
 - **Ambience** — toggle rain, dust motes, string lights, and the spinning vinyl on the desk.
 - **Data** — back up / restore everything, or log out.
 
@@ -293,6 +295,31 @@ On **The Board** specifically:
 | `⌘/Ctrl` + scroll | Zoom |
 
 ---
+
+## The Dashboard (home screen)
+
+Replaces the old row of monitors. It's the life-planner front page:
+
+- **Quick nav** — a card for each of the seven screens below, in place of the old clickable monitors.
+- **To-do** — a real task list, backed by the exact same tasks The Calendar uses. Tick something off here and it's ticked off there too (and vice versa). Quick-add at the bottom drops an unscheduled task; anything you date on The Calendar shows up here as well while it's due.
+- **This week** — a donut of this week's tasks, done vs open.
+- **Activity, last 7 days** — a small bar chart of the same tasks, day by day.
+- **Tiles** — books finished, thoughts kept, projects on the go, pictures kept.
+- **Upcoming** — the next few dated items from The Calendar.
+- **Reading now** — whatever's on The Shelf marked "Reading."
+- **From the margin** — your three most recent thoughts/quotes.
+- **Projects** — progress bars for your stacks.
+- **Gallery strip** — the most recent pictures kept in the Gallery (see below), with a button to open the full thing.
+
+Everything here reads live from the same data the other screens use, so nothing needs re-entering — it just reflects what's already in The Calendar, The Shelf, The Margin, The Stacks, and The Board.
+
+## The Gallery
+
+Every picture you ever pin to The Board — and every picture you set as a board's background — is also copied into the Gallery the moment you add it. The Board itself is meant to be curated (you'll delete and rearrange things there), but the Gallery is append-only: removing a picture from a board does **not** remove it from the Gallery. Open it from the **Gallery** button on the Dashboard. Each picture keeps a small caption (which board it came from, and when), and pictures can only be removed from the Gallery deliberately, from inside the Gallery itself.
+
+## Colour — six palettes, or build your own
+
+Settings still has the original six dark palettes. Underneath them is a **Custom palette** picker: five colour swatches (background, panels, primary accent, secondary accent, text). Pick your five, click **Use this palette**, and the rest of the room — borders, dimmed text, the secondary accents, everything — is derived from those five to stay coherent. It's saved as its own theme and stays selected until you pick something else.
 
 ## The seven screens
 

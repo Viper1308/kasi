@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
-<title>Polymath OS</title>
+<title>KASI — Knowledge &amp; Areas of Self-Improvement</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -17,25 +17,16 @@
 
 <!-- ═══════════ LOGIN GATE ═══════════ -->
 <div id="loginGate" class="login-gate">
-  <div class="login-room">
-    <div class="login-desk">
-      <div class="login-lamp"></div>
-      <div class="login-box">
-        <div class="login-screen-frame">
-          <div class="login-screen-inner">
-            <div class="login-logo">POLYMATH<i>OS</i></div>
-            <p class="login-sub" id="loginSub">private terminal</p>
-            <input type="text" id="loginUser" class="login-inp" placeholder="user" autocomplete="username" autofocus>
-            <input type="password" id="loginPass" class="login-inp" placeholder="password" autocomplete="current-password">
-            <button class="login-btn" id="loginBtn">Log in</button>
-            <p class="login-err" id="loginErr"></p>
-            <p class="login-switch" id="loginSwitch" hidden></p>
-          </div>
-        </div>
-        <div class="login-stand"></div>
-        <div class="login-base"></div>
-      </div>
-    </div>
+  <div class="login-card">
+    <div class="login-mark">K</div>
+    <div class="login-logo">KASI</div>
+    <p class="login-tagline">Knowledge &amp; Areas of Self-Improvement</p>
+    <p class="login-sub" id="loginSub">private terminal</p>
+    <input type="text" id="loginUser" class="login-inp" placeholder="user" autocomplete="username" autofocus>
+    <input type="password" id="loginPass" class="login-inp" placeholder="password" autocomplete="current-password">
+    <button class="login-btn" id="loginBtn">Log in</button>
+    <p class="login-err" id="loginErr"></p>
+    <p class="login-switch" id="loginSwitch" hidden></p>
   </div>
 </div>
 
@@ -45,174 +36,144 @@
   <!-- ── THE DESK (home) ── -->
   <div id="deskView" class="desk-scene">
 
-    <!-- atmospheric backdrop -->
-    <div class="room-sky"></div>
-    <div class="room-stars" id="roomStars"></div>
-    <div class="room-window">
-      <div class="win-frame">
-        <div class="win-glass">
-          <div class="win-moon"></div>
-          <div class="win-cloud c1"></div>
-          <div class="win-cloud c2"></div>
-          <div class="win-rain" id="winRain"></div>
-        </div>
-        <div class="win-mullion-v"></div>
-        <div class="win-mullion-h"></div>
-      </div>
-      <div class="win-sill"></div>
-    </div>
-
-    <div class="room-wall"></div>
-    <div class="dust" id="dust"></div>
-
-    <!-- string lights across the top -->
-    <div class="string-lights" id="stringLights"></div>
-
-    <!-- desk lamp with warm pool of light -->
-    <div class="room-lamp">
-      <div class="lamp-arm"></div>
-      <div class="lamp-head"></div>
-    </div>
-    <div class="lamp-pool"></div>
-
-    <!-- plant -->
-    <div class="room-plant">
-      <div class="plant-pot"></div>
-      <div class="plant-leaf l1"></div>
-      <div class="plant-leaf l2"></div>
-      <div class="plant-leaf l3"></div>
-      <div class="plant-leaf l4"></div>
-      <div class="plant-leaf l5"></div>
-      <div class="plant-leaf l6"></div>
-    </div>
-
-    <!-- clock -->
-    <div class="room-clock" id="deskClock">19:45</div>
-
-    <!-- vinyl record spinning -->
-    <div class="room-vinyl">
-      <div class="vinyl-disc"></div>
-      <div class="vinyl-note n1">♪</div>
-      <div class="vinyl-note n2">♫</div>
-    </div>
-
     <!-- settings gear -->
     <button class="settings-gear" id="settingsGear" title="Settings">
       <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 8a4 4 0 100 8 4 4 0 000-8zM12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
     </button>
+    <div class="desk-clock-pill" id="deskClock">19:45</div>
 
-    <!-- 3×2 monitor grid -->
-    <div class="monitor-rig">
-      <div class="mon-row top">
-        <button class="monitor left" data-view="profile" id="mon-profile">
-          <div class="mon-bezel">
-            <div class="mon-screen">
-              <div class="mon-label">THE RECORD</div>
-              <div class="mon-desc">your CV</div>
-              <svg class="mon-icon" viewBox="0 0 40 40"><circle cx="20" cy="14" r="7"/><path d="M8 36c0-8 5-13 12-13s12 5 12 13"/></svg>
-            </div>
-          </div>
-          <div class="mon-neck"></div>
-        </button>
-        <button class="monitor center" data-view="web" id="mon-web">
-          <div class="mon-bezel">
-            <div class="mon-screen">
-              <div class="mon-label">THE WEB</div>
-              <div class="mon-desc">78 strands</div>
-              <svg class="mon-icon" viewBox="0 0 40 40"><circle cx="20" cy="20" r="12" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="20" x2="32" y2="20" stroke="currentColor" stroke-width="1"/><line x1="20" y1="8" x2="20" y2="32" stroke="currentColor" stroke-width="1"/><line x1="11" y1="11" x2="29" y2="29" stroke="currentColor" stroke-width="1"/></svg>
-            </div>
-          </div>
-          <div class="mon-neck"></div>
-        </button>
-        <button class="monitor right" data-view="books" id="mon-books">
-          <div class="mon-bezel">
-            <div class="mon-screen">
-              <div class="mon-label">THE SHELF</div>
-              <div class="mon-desc">book logger</div>
-              <svg class="mon-icon" viewBox="0 0 40 40"><rect x="8" y="8" width="5" height="24" rx="1"/><rect x="15" y="12" width="4" height="20" rx="1"/><rect x="21" y="6" width="5" height="26" rx="1"/><rect x="28" y="10" width="4" height="22" rx="1"/></svg>
-            </div>
-          </div>
-          <div class="mon-neck"></div>
-        </button>
-        <button class="monitor right" data-view="stacks" id="mon-stacks">
-          <div class="mon-bezel">
-            <div class="mon-screen">
-              <div class="mon-label">THE STACKS</div>
-              <div class="mon-desc">projects, piled</div>
-              <svg class="mon-icon" viewBox="0 0 40 40"><rect x="7" y="25" width="26" height="6" rx="1.5"/><rect x="9" y="18" width="22" height="6" rx="1.5"/><rect x="11" y="11" width="18" height="6" rx="1.5"/><rect x="13" y="5" width="14" height="5" rx="1.5"/></svg>
-            </div>
-          </div>
-          <div class="mon-neck"></div>
-        </button>
-      </div>
-      <div class="mon-row bottom">
-        <button class="monitor left" data-view="calendar" id="mon-calendar">
-          <div class="mon-bezel">
-            <div class="mon-screen">
-              <div class="mon-label">THE CALENDAR</div>
-              <div class="mon-desc">plan it</div>
-              <svg class="mon-icon" viewBox="0 0 40 40"><rect x="8" y="10" width="24" height="22" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="16" x2="32" y2="16" stroke="currentColor" stroke-width="1.5"/><line x1="15" y1="8" x2="15" y2="12" stroke="currentColor" stroke-width="1.5"/><line x1="25" y1="8" x2="25" y2="12" stroke="currentColor" stroke-width="1.5"/></svg>
-            </div>
-          </div>
-          <div class="mon-neck"></div>
-        </button>
-        <button class="monitor center" data-view="thoughts" id="mon-thoughts">
-          <div class="mon-bezel">
-            <div class="mon-screen">
-              <div class="mon-label">THE MARGIN</div>
-              <div class="mon-desc">thoughts & quotes</div>
-              <svg class="mon-icon" viewBox="0 0 40 40"><line x1="10" y1="12" x2="30" y2="12" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="18" x2="26" y2="18" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="24" x2="22" y2="24" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="30" x2="18" y2="30" stroke="currentColor" stroke-width="1.5"/></svg>
-            </div>
-          </div>
-          <div class="mon-neck"></div>
-        </button>
-        <button class="monitor right" data-view="vision" id="mon-vision">
-          <div class="mon-bezel">
-            <div class="mon-screen">
-              <div class="mon-label">THE BOARD</div>
-              <div class="mon-desc">vision board</div>
-              <svg class="mon-icon" viewBox="0 0 40 40"><rect x="7" y="8" width="14" height="10" rx="1.5"/><rect x="23" y="8" width="10" height="15" rx="1.5"/><rect x="7" y="20" width="10" height="12" rx="1.5"/><rect x="19" y="25" width="14" height="7" rx="1.5"/></svg>
-            </div>
-          </div>
-          <div class="mon-neck"></div>
-        </button>
-      </div>
-    </div>
+    <!-- ═══════════ LIFE PLANNER DASHBOARD (replaces the monitor rig) ═══════════ -->
+    <div class="dash-wrap" id="dashWrap">
 
-    <!-- desk surface -->
-    <div class="desk-surface">
-      <div class="desk-keyboard">
-        <div class="kb-glow"></div>
-      </div>
-      <div class="desk-mouse"></div>
-      <div class="desk-mug">
-        <div class="mug-steam s1"></div>
-        <div class="mug-steam s2"></div>
-        <div class="mug-steam s3"></div>
-      </div>
-      <div class="desk-cup"></div>
-      <div class="desk-stack">
-        <div class="sbook sb1"></div>
-        <div class="sbook sb2"></div>
-        <div class="sbook sb3"></div>
+      <!-- ── sidebar ── -->
+      <aside class="dash-side">
+        <div class="dash-side-brand">
+          <div class="dash-side-mark">K</div>
+          <div><b>KASI</b><span>Self-improvement OS</span></div>
+        </div>
+
+        <nav class="dash-nav" id="dashNav">
+          <button class="quick-nav" data-view="profile">
+            <svg class="qn-ic" viewBox="0 0 40 40"><circle cx="20" cy="14" r="7"/><path d="M8 36c0-8 5-13 12-13s12 5 12 13"/></svg>
+            <span>The Record</span>
+          </button>
+          <button class="quick-nav" data-view="web">
+            <svg class="qn-ic" viewBox="0 0 40 40"><circle cx="20" cy="20" r="12" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="20" x2="32" y2="20" stroke="currentColor" stroke-width="1"/><line x1="20" y1="8" x2="20" y2="32" stroke="currentColor" stroke-width="1"/><line x1="11" y1="11" x2="29" y2="29" stroke="currentColor" stroke-width="1"/></svg>
+            <span>The Web</span>
+          </button>
+          <button class="quick-nav" data-view="books">
+            <svg class="qn-ic" viewBox="0 0 40 40"><rect x="8" y="8" width="5" height="24" rx="1"/><rect x="15" y="12" width="4" height="20" rx="1"/><rect x="21" y="6" width="5" height="26" rx="1"/><rect x="28" y="10" width="4" height="22" rx="1"/></svg>
+            <span>The Shelf</span>
+          </button>
+          <button class="quick-nav" data-view="stacks">
+            <svg class="qn-ic" viewBox="0 0 40 40"><rect x="7" y="25" width="26" height="6" rx="1.5"/><rect x="9" y="18" width="22" height="6" rx="1.5"/><rect x="11" y="11" width="18" height="6" rx="1.5"/><rect x="13" y="5" width="14" height="5" rx="1.5"/></svg>
+            <span>The Stacks</span>
+          </button>
+          <button class="quick-nav" data-view="calendar">
+            <svg class="qn-ic" viewBox="0 0 40 40"><rect x="8" y="10" width="24" height="22" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="16" x2="32" y2="16" stroke="currentColor" stroke-width="1.5"/><line x1="15" y1="8" x2="15" y2="12" stroke="currentColor" stroke-width="1.5"/><line x1="25" y1="8" x2="25" y2="12" stroke="currentColor" stroke-width="1.5"/></svg>
+            <span>The Calendar</span>
+          </button>
+          <button class="quick-nav" data-view="thoughts">
+            <svg class="qn-ic" viewBox="0 0 40 40"><line x1="10" y1="12" x2="30" y2="12" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="18" x2="26" y2="18" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="24" x2="22" y2="24" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="30" x2="18" y2="30" stroke="currentColor" stroke-width="1.5"/></svg>
+            <span>The Margin</span>
+          </button>
+          <button class="quick-nav" data-view="vision">
+            <svg class="qn-ic" viewBox="0 0 40 40"><rect x="7" y="8" width="14" height="10" rx="1.5"/><rect x="23" y="8" width="10" height="15" rx="1.5"/><rect x="7" y="20" width="10" height="12" rx="1.5"/><rect x="19" y="25" width="14" height="7" rx="1.5"/></svg>
+            <span>The Board</span>
+          </button>
+        </nav>
+
+        <button class="dash-gallery-btn" id="dashGalleryBtn" title="Open the gallery">
+          <svg viewBox="0 0 24 24" width="15" height="15"><rect x="3" y="4" width="18" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="8.5" cy="10" r="1.6" fill="currentColor"/><path d="M4 16l5-4.5 3.5 3L16 10l4 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Gallery</span><b id="dashGalleryCount">0</b>
+        </button>
+
+        <div class="dash-side-tiles" id="dashTiles"></div>
+      </aside>
+
+      <!-- ── main column ── -->
+      <div class="dash-main">
+
+        <div class="dash-head">
+          <div class="dash-greet">
+            <div class="dash-hello" id="dashHello">Hello</div>
+            <div class="dash-date" id="dashDate">—</div>
+          </div>
+        </div>
+
+        <!-- widgets -->
+        <div class="dash-grid" id="dashGrid">
+
+          <div class="dash-card dash-todo">
+            <h4>Task Manager <span class="dash-count" id="dashTodoCount"></span></h4>
+            <div class="dash-todo-list" id="dashTodoList"></div>
+            <div class="dash-todo-add">
+              <input type="text" id="dashTodoInput" class="inp" placeholder="Add a task — Enter to save" maxlength="140">
+            </div>
+          </div>
+
+          <div class="dash-card dash-radar">
+            <h4>Life balance</h4>
+            <svg id="dashRadar" viewBox="0 0 220 200" class="dash-radar-svg"></svg>
+          </div>
+
+          <div class="dash-card dash-pomo">
+            <h4>Focus timer</h4>
+            <div class="pomo-tabs" id="pomoTabs">
+              <button class="pomo-tab on" data-mode="focus">Focus</button>
+              <button class="pomo-tab" data-mode="short">Short break</button>
+              <button class="pomo-tab" data-mode="long">Long break</button>
+            </div>
+            <div class="pomo-time" id="pomoTime">25:00</div>
+            <div class="pomo-controls">
+              <button class="btn pomo-start" id="pomoStart">Start</button>
+              <button class="btn ghost tiny" id="pomoReset" title="Reset">↺</button>
+            </div>
+          </div>
+
+          <div class="dash-card dash-stats">
+            <h4>Tasks, this week</h4>
+            <div class="dash-stats-row">
+              <svg id="dashPie" viewBox="0 0 120 120" class="dash-pie"></svg>
+              <div class="dash-pie-legend" id="dashPieLegend"></div>
+            </div>
+          </div>
+
+          <div class="dash-card dash-bars">
+            <h4>Activity, last 7 days</h4>
+            <svg id="dashBars" viewBox="0 0 300 130" class="dash-bars-svg" preserveAspectRatio="none"></svg>
+          </div>
+
+          <div class="dash-card dash-upcoming">
+            <h4>Upcoming</h4>
+            <div id="dashUpcoming"></div>
+          </div>
+
+          <div class="dash-card dash-reading">
+            <h4>Reading now</h4>
+            <div id="dashReading"></div>
+          </div>
+
+          <div class="dash-card dash-thoughts">
+            <h4>From the margin</h4>
+            <div id="dashThoughts"></div>
+          </div>
+
+          <div class="dash-card dash-stacks">
+            <h4>Projects</h4>
+            <div id="dashStacks"></div>
+          </div>
+
+          <div class="dash-card dash-gallery-box">
+            <h4>Gallery <span class="dash-count" id="dashGalleryStripCount"></span></h4>
+            <div class="dash-gallery-strip" id="dashGalleryStrip"></div>
+          </div>
+
+        </div>
       </div>
     </div>
-    <div class="desk-under">
-      <div class="desk-pc">
-        <div class="pc-glass"></div>
-        <div class="pc-fan"></div>
-        <div class="pc-led"></div>
-      </div>
-      <div class="desk-books">
-        <div class="dbook b1"></div>
-        <div class="dbook b2"></div>
-        <div class="dbook b3"></div>
-        <div class="dbook b4"></div>
-        <div class="dbook b5"></div>
-      </div>
-    </div>
-    <div class="desk-floor"></div>
   </div>
+
 
   <!-- ── SETTINGS PANEL ── -->
   <div id="settingsPanel" class="settings-panel hidden">
@@ -228,11 +189,16 @@
       </div>
 
       <div class="settings-block">
-        <h4>Ambience</h4>
-        <label class="settings-toggle"><input type="checkbox" id="setRain" checked><span>Rain on the window</span></label>
-        <label class="settings-toggle"><input type="checkbox" id="setDust" checked><span>Drifting dust motes</span></label>
-        <label class="settings-toggle"><input type="checkbox" id="setLights" checked><span>String lights</span></label>
-        <label class="settings-toggle"><input type="checkbox" id="setVinyl" checked><span>Spinning vinyl</span></label>
+        <h4>Custom palette</h4>
+        <p class="settings-desc">Pick your own colours — the rest of the room is derived to match, then saved as its own theme.</p>
+        <div class="theme-custom-grid">
+          <label class="ct-swatch">Background<input type="color" id="ctBg"></label>
+          <label class="ct-swatch">Panels<input type="color" id="ctPanel"></label>
+          <label class="ct-swatch">Primary accent<input type="color" id="ctPrimary"></label>
+          <label class="ct-swatch">Secondary accent<input type="color" id="ctSecondary"></label>
+          <label class="ct-swatch">Text<input type="color" id="ctInk"></label>
+        </div>
+        <button class="btn ghost" id="ctApply" style="margin-top:10px">Use this palette</button>
       </div>
 
       <div class="settings-block">
@@ -473,6 +439,26 @@
     </div>
   </div>
 
+  <!-- ── GALLERY (every picture ever pinned to the Board, kept even after it's removed there) ── -->
+  <div id="galleryModal" class="gallery-modal hidden">
+    <div class="gallery-backdrop" id="galleryBackdrop"></div>
+    <div class="gallery-card">
+      <div class="gallery-head">
+        <div>
+          <h2>Gallery</h2>
+          <p class="gallery-sub" id="gallerySub">Everything you've ever pinned to the Board.</p>
+        </div>
+        <button class="settings-close" id="galleryClose">✕</button>
+      </div>
+      <div class="gallery-grid" id="galleryGrid"></div>
+    </div>
+  </div>
+  <div id="galleryLightbox" class="gallery-lightbox hidden">
+    <button class="gallery-lb-close" id="galleryLbClose">✕</button>
+    <img id="galleryLbImg" src="" alt="">
+    <div class="gallery-lb-meta" id="galleryLbMeta"></div>
+  </div>
+
   <div class="toast" id="toast" hidden></div>
 </div>
 
@@ -489,6 +475,8 @@
 <script src="js/thoughts.js"></script>
 <script src="js/stacks.js"></script>
 <script src="js/vision.js"></script>
+<script src="js/gallery.js"></script>
+<script src="js/dashboard.js"></script>
 <script src="js/mobile.js"></script>
 <script src="js/app.js"></script>
 </body>

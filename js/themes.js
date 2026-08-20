@@ -3,88 +3,159 @@ const Themes = (() => {
   // Each theme overrides a handful of root vars. Kept small on purpose.
   const THEMES = {
     midnight: {
-      name: 'Midnight Amber', mood: 'warm lamp, cold room',
+      name: 'Slate Mint', mood: 'near-black, cool mint accent',
       vars: {
-        '--room': '#1a1520', '--wall': '#2a2233', '--screen': '#121a23', '--screen-bg': '#0c1018',
-        '--panel': '#18222d', '--panel-2': '#1e2a37', '--line': '#2a3846',
-        '--ink': '#e9e5da', '--dim': '#8a99a9', '--faint': '#5b6875',
-        '--amber': '#e9a13b', '--cyan': '#5fd3c4', '--rose': '#e0708a', '--violet': '#9b8cf0',
-        '--desk-top': '#5a4230', '--desk': '#3d2e1e', '--desk-dark': '#2b1d12'
+        '--room': '#0c0c0e', '--wall': '#111113', '--screen': '#151517', '--screen-bg': '#0a0a0c',
+        '--panel': '#151517', '--panel-2': '#1b1b1f', '--line': '#26262b',
+        '--ink': '#eceef0', '--dim': '#9a9ca3', '--faint': '#5c5e66',
+        '--amber': '#7dd3a8', '--cyan': '#5fb4e0', '--rose': '#e0708a', '--violet': '#9b8cf0',
+        '--desk-top': '#26262b', '--desk': '#1b1b1f', '--desk-dark': '#111113'
       },
-      sky: 'linear-gradient(180deg,#1a1520 0%,#241a2e 40%,#3a2740 100%)',
-      accent2: '#c77dbb'
+      accent2: '#5fb4e0'
     },
     forest: {
-      name: 'Deep Forest', mood: 'green dusk, moss and pine',
+      name: 'Graphite Sage', mood: 'near-black, muted green accent',
       vars: {
-        '--room': '#0f1712', '--wall': '#16241a', '--screen': '#0f1a15', '--screen-bg': '#0a120d',
-        '--panel': '#14231b', '--panel-2': '#1a2e23', '--line': '#274034',
-        '--ink': '#e6ebe2', '--dim': '#8aa598', '--faint': '#557060',
-        '--amber': '#d4a95a', '--cyan': '#63d19e', '--rose': '#e08a7a', '--violet': '#8fb890',
-        '--desk-top': '#4a4028', '--desk': '#332c1a', '--desk-dark': '#221d10'
+        '--room': '#0b0d0c', '--wall': '#101312', '--screen': '#141a17', '--screen-bg': '#090b0a',
+        '--panel': '#141a17', '--panel-2': '#1a211d', '--line': '#26302a',
+        '--ink': '#e9ede9', '--dim': '#98a49c', '--faint': '#5a675e',
+        '--amber': '#8fc98f', '--cyan': '#63c9b0', '--rose': '#e0917a', '--violet': '#94b894',
+        '--desk-top': '#26302a', '--desk': '#1a211d', '--desk-dark': '#101312'
       },
-      sky: 'linear-gradient(180deg,#0f1712 0%,#16241a 45%,#243a28 100%)',
-      accent2: '#7fbf8a'
+      accent2: '#63c9b0'
     },
     ocean: {
-      name: 'Abyssal Blue', mood: 'deep water, bioluminescence',
+      name: 'Graphite Blue', mood: 'near-black, cool blue accent',
       vars: {
-        '--room': '#0c141f', '--wall': '#13202f', '--screen': '#0d1826', '--screen-bg': '#08111c',
-        '--panel': '#122032', '--panel-2': '#17293e', '--line': '#22394f',
-        '--ink': '#e2eaf2', '--dim': '#84a0bc', '--faint': '#51687a',
-        '--amber': '#5fb4d4', '--cyan': '#4fe0d0', '--rose': '#e07a9a', '--violet': '#8ba8f0',
-        '--desk-top': '#2e4258', '--desk': '#1e2e3e', '--desk-dark': '#141f2b'
+        '--room': '#0a0c0f', '--wall': '#0f1319', '--screen': '#131a22', '--screen-bg': '#080b0e',
+        '--panel': '#131a22', '--panel-2': '#182130', '--line': '#243144',
+        '--ink': '#e6ecf2', '--dim': '#8fa2b8', '--faint': '#556577',
+        '--amber': '#5fa8e0', '--cyan': '#4fc9e0', '--rose': '#e07a9a', '--violet': '#8ba8f0',
+        '--desk-top': '#243144', '--desk': '#182130', '--desk-dark': '#0f1319'
       },
-      sky: 'linear-gradient(180deg,#0c141f 0%,#13202f 45%,#1c3348 100%)',
-      accent2: '#5fb4d4'
+      accent2: '#4fc9e0'
     },
     plum: {
-      name: 'Velvet Plum', mood: 'purple neon, late night',
+      name: 'Graphite Violet', mood: 'near-black, violet accent',
       vars: {
-        '--room': '#160f1c', '--wall': '#231733', '--screen': '#150f1e', '--screen-bg': '#0f0916',
-        '--panel': '#1c1428', '--panel-2': '#261a35', '--line': '#382a48',
-        '--ink': '#ece5f0', '--dim': '#a394b5', '--faint': '#6b5a7d',
-        '--amber': '#e0a0d8', '--cyan': '#7fd6e0', '--rose': '#f07aa8', '--violet': '#b89cf5',
-        '--desk-top': '#4a3450', '--desk': '#332338', '--desk-dark': '#221726'
+        '--room': '#0c0b0f', '--wall': '#121019', '--screen': '#171420', '--screen-bg': '#0a090e',
+        '--panel': '#171420', '--panel-2': '#1e1a2b', '--line': '#2d2740',
+        '--ink': '#ebe8f0', '--dim': '#a096b0', '--faint': '#605570',
+        '--amber': '#b89cf5', '--cyan': '#7fd6e0', '--rose': '#e07ab8', '--violet': '#a58cf0',
+        '--desk-top': '#2d2740', '--desk': '#1e1a2b', '--desk-dark': '#121019'
       },
-      sky: 'linear-gradient(180deg,#160f1c 0%,#231733 45%,#3a2450 100%)',
-      accent2: '#c77dcf'
+      accent2: '#e07ab8'
     },
     ember: {
-      name: 'Ember Rust', mood: 'firelight on old brick',
+      name: 'Graphite Amber', mood: 'near-black, warm amber accent',
       vars: {
-        '--room': '#1a1210', '--wall': '#2a1c16', '--screen': '#191210', '--screen-bg': '#120b09',
-        '--panel': '#231713', '--panel-2': '#301e18', '--line': '#432b22',
-        '--ink': '#f0e6dd', '--dim': '#b59a8a', '--faint': '#7d5f50',
-        '--amber': '#f08a4b', '--cyan': '#6fc9b0', '--rose': '#e86a6a', '--violet': '#c99a8a',
-        '--desk-top': '#5a3820', '--desk': '#3d2614', '--desk-dark': '#2b1a0e'
+        '--room': '#0d0c0b', '--wall': '#131110', '--screen': '#18150f', '--screen-bg': '#0a0908',
+        '--panel': '#18150f', '--panel-2': '#211c14', '--line': '#332b1e',
+        '--ink': '#f0ebe2', '--dim': '#b0a291', '--faint': '#6e6252',
+        '--amber': '#e0a34b', '--cyan': '#6fc9b0', '--rose': '#e0756a', '--violet': '#c9a98a',
+        '--desk-top': '#332b1e', '--desk': '#211c14', '--desk-dark': '#131110'
       },
-      sky: 'linear-gradient(180deg,#1a1210 0%,#2a1c16 45%,#42281c 100%)',
-      accent2: '#e0703b'
+      accent2: '#e0756a'
     },
     slate: {
-      name: 'Graphite Mono', mood: 'quiet, ink and paper',
+      name: 'Pure Graphite', mood: 'near-black, monochrome', 
       vars: {
-        '--room': '#141619', '--wall': '#1e2126', '--screen': '#16191d', '--screen-bg': '#101215',
-        '--panel': '#1b1f24', '--panel-2': '#242930', '--line': '#333942',
-        '--ink': '#e8eaed', '--dim': '#98a0aa', '--faint': '#616872',
-        '--amber': '#c4b590', '--cyan': '#7fc4c0', '--rose': '#d08a94', '--violet': '#9ba8c4',
-        '--desk-top': '#454b52', '--desk': '#2e3339', '--desk-dark': '#20242a'
+        '--room': '#0a0a0b', '--wall': '#0f0f11', '--screen': '#141416', '--screen-bg': '#08080a',
+        '--panel': '#141416', '--panel-2': '#1a1a1d', '--line': '#28282c',
+        '--ink': '#e8e8ea', '--dim': '#9b9ba0', '--faint': '#5c5c62',
+        '--amber': '#c4c8cc', '--cyan': '#8fa8b4', '--rose': '#c98a94', '--violet': '#9ba0c4',
+        '--desk-top': '#28282c', '--desk': '#1a1a1d', '--desk-dark': '#0f0f11'
       },
-      sky: 'linear-gradient(180deg,#141619 0%,#1e2126 45%,#2a2f36 100%)',
-      accent2: '#a0a8b4'
+      accent2: '#8fa8b4'
     }
   };
+
+  /* ---- colour maths, used to derive a full palette from a few picked colours ---- */
+  function hexToRgb(hex) {
+    hex = String(hex).replace('#', '');
+    if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+    const n = parseInt(hex, 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+  function rgbToHex([r, g, b]) {
+    return '#' + [r, g, b].map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')).join('');
+  }
+  function rgbToHsl([r, g, b]) {
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+    if (max === min) { h = s = 0; }
+    else {
+      const d = max - min;
+      s = l > .5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        default: h = (r - g) / d + 4;
+      }
+      h /= 6;
+    }
+    return [h * 360, s * 100, l * 100];
+  }
+  function hslToRgb([h, s, l]) {
+    h /= 360; s /= 100; l /= 100;
+    let r, g, b;
+    if (s === 0) { r = g = b = l; }
+    else {
+      const hue2rgb = (p, q, t) => {
+        if (t < 0) t += 1; if (t > 1) t -= 1;
+        if (t < 1 / 6) return p + (q - p) * 6 * t;
+        if (t < 1 / 2) return q;
+        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+        return p;
+      };
+      const q = l < .5 ? l * (1 + s) : l + s - l * s;
+      const p = 2 * l - q;
+      r = hue2rgb(p, q, h + 1 / 3); g = hue2rgb(p, q, h); b = hue2rgb(p, q, h - 1 / 3);
+    }
+    return [r * 255, g * 255, b * 255];
+  }
+  const lighten = (hex, amt) => { const hsl = rgbToHsl(hexToRgb(hex)); hsl[2] = Math.min(100, Math.max(0, hsl[2] + amt)); return rgbToHex(hslToRgb(hsl)); };
+  const darken = (hex, amt) => lighten(hex, -amt);
+  const rotate = (hex, deg) => { const hsl = rgbToHsl(hexToRgb(hex)); hsl[0] = (hsl[0] + deg + 360) % 360; return rgbToHex(hslToRgb(hsl)); };
+  const mix = (hexA, hexB, t) => { const a = hexToRgb(hexA), b = hexToRgb(hexB); return rgbToHex([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]); };
+
+  const DEFAULT_CUSTOM_BASE = { bg: '#171320', panel: '#1d1a29', primary: '#e9a13b', secondary: '#5fd3c4', ink: '#e9e5da' };
+
+  function buildCustom(base) {
+    const b = { ...DEFAULT_CUSTOM_BASE, ...base };
+    const dark = rgbToHsl(hexToRgb(b.bg))[2] < 50;
+    const faint = mix(b.bg, b.ink, dark ? .32 : .45);
+    const dim = mix(b.bg, b.ink, dark ? .58 : .68);
+    const vars = {
+      '--room': b.bg, '--wall': lighten(b.bg, 7), '--screen': mix(b.bg, b.panel, .5), '--screen-bg': darken(b.bg, 3),
+      '--panel': b.panel, '--panel-2': lighten(b.panel, 6), '--line': lighten(b.panel, 16),
+      '--ink': b.ink, '--dim': dim, '--faint': faint,
+      '--amber': b.primary, '--cyan': b.secondary, '--rose': rotate(b.primary, -42), '--violet': rotate(b.secondary, 38),
+      '--desk-top': lighten(b.panel, 10), '--desk': b.panel, '--desk-dark': darken(b.panel, 8)
+    };
+    return {
+      name: 'Custom', mood: 'built by you', vars,
+      accent2: b.secondary
+    };
+  }
+
+  function applyCustom(base) {
+    Store.set('ui.customBase', base);
+    THEMES.custom = buildCustom(base);
+    apply('custom');
+  }
+  const getCustomBase = () => Store.get('ui.customBase', null);
 
   let currentKey = Store.get('ui.theme', 'midnight');
 
   function apply(key) {
+    if (key === 'custom') THEMES.custom = buildCustom(Store.get('ui.customBase', null) || DEFAULT_CUSTOM_BASE);
     const t = THEMES[key] || THEMES.midnight;
     currentKey = key;
     const root = document.documentElement;
     Object.entries(t.vars).forEach(([k, v]) => root.style.setProperty(k, v));
     root.style.setProperty('--amber-glow', hexA(t.vars['--amber'], .15));
-    root.style.setProperty('--sky', t.sky);
     root.style.setProperty('--accent2', t.accent2 || t.vars['--cyan']);
     Store.set('ui.theme', key);
     document.body.dataset.theme = key;
@@ -94,8 +165,13 @@ const Themes = (() => {
     return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`;
   }
 
-  function list() { return Object.entries(THEMES).map(([k, t]) => ({ key: k, ...t })); }
+  function list() {
+    const out = Object.entries(THEMES).filter(([k]) => k !== 'custom').map(([k, t]) => ({ key: k, ...t }));
+    const base = getCustomBase();
+    if (base) out.push({ key: 'custom', ...buildCustom(base) });
+    return out;
+  }
   function current() { return currentKey; }
 
-  return { apply, list, current, THEMES };
+  return { apply, list, current, THEMES, applyCustom, getCustomBase, defaultCustomBase: DEFAULT_CUSTOM_BASE };
 })();

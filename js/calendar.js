@@ -208,5 +208,24 @@ const Cal = (() => {
     else cursor = new Date(cursor.getFullYear() + dir, 0, 1);
     grid();
   }
-  return { init, grid };
+  /* ---------- small read/write surface used by the Dashboard's To-do widget ----------
+     Works on the exact same `items` this module already renders, so anything added,
+     ticked, or dated here shows up on The Calendar too, and vice versa. Purely additive —
+     nothing above this is touched. */
+  function dashTasks() { return items.filter(i => i.kind === 'task'); }
+  function dashAddTask(text, date) {
+    const t = (text || '').trim(); if (!t) return null;
+    const it = { id: uid(), text: t, kind: 'task', cal: (cals[0] && cals[0].id) || 'life', date: date || null, done: false };
+    items.unshift(it); save();
+    return it;
+  }
+  function dashToggleTask(id) {
+    const it = items.find(x => x.id === id);
+    if (it) { it.done = !it.done; save(); }
+    return it;
+  }
+  function dashRemoveTask(id) { items = items.filter(x => x.id !== id); save(); }
+  function dashColor(calId) { return colorOf(calId); }
+
+  return { init, grid, dashTasks, dashAddTask, dashToggleTask, dashRemoveTask, dashColor };
 })();
