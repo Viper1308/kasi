@@ -1,6 +1,6 @@
 /* ══════════════ THE RIG — login, desk scene, view switching ══════════════ */
 (() => {
-  const VIEWS = ['profile', 'web', 'books', 'stacks', 'calendar', 'thoughts', 'vision'];
+  const VIEWS = ['profile', 'web', 'books', 'stacks', 'calendar', 'thoughts', 'vision', 'docket'];
   let current = null;
   let inited = false;
 
@@ -311,7 +311,7 @@
 
     Mobile.init();
     Profile.render(); Web.init(); Books.init(); Stacks.init(); Cal.init(); Margin.init(); Board.init();
-    Gallery.init(); Dashboard.init();
+    Gallery.init(); Dashboard.init(); Docket.init();
     clock(); setInterval(clock, 20000);
     gauge(); setInterval(gauge, 8000);
 

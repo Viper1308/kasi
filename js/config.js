@@ -11,6 +11,6 @@
    hiding this key. See README, "Sync across devices".
    ============================================================ */
 window.SUPABASE_CONFIG = {
-  url:     'https://tqnmkfedmipugznonzjh.supabase.co',   // e.g. https://abcdefgh.supabase.co
-  anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxbm1rZmVkbWlwdWd6bm9uempoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU0MjI0NjUsImV4cCI6MjEwMDk5ODQ2NX0.dOki6Ph1tgVUI4TWG5O83B5fGf80FE2stjlNHdQcOtk'    // the long "anon public" key from Supabase → Settings → API
+  url:     '',   // e.g. https://abcdefgh.supabase.co
+  anonKey: ''    // the long "anon public" key from Supabase → Settings → API
 };
