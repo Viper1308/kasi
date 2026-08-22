@@ -92,7 +92,6 @@
           <span>Gallery</span><b id="dashGalleryCount">0</b>
         </button>
 
-        <div class="dash-side-tiles" id="dashTiles"></div>
       </aside>
 
       <!-- ── main column ── -->
@@ -108,6 +107,11 @@
         <!-- widgets -->
         <div class="dash-grid" id="dashGrid">
 
+          <div class="dash-card dash-examprog">
+            <h4>Exam Progress <span class="dash-count" id="dashExamProgTotal"></span></h4>
+            <div id="dashExamProg"></div>
+          </div>
+
           <div class="dash-card dash-todo">
             <h4>Task Manager <span class="dash-count" id="dashTodoCount"></span></h4>
             <div class="dash-todo-list" id="dashTodoList"></div>
@@ -122,7 +126,7 @@
           </div>
 
           <div class="dash-card dash-pomo">
-            <h4>Focus timer</h4>
+            <h4>Focus timer <button class="pomo-popout-btn" id="pomoPopout" title="Open as a popout window">⧉</button></h4>
             <div class="pomo-tabs" id="pomoTabs">
               <button class="pomo-tab on" data-mode="focus">Focus</button>
               <button class="pomo-tab" data-mode="short">Short break</button>
@@ -372,10 +376,16 @@
         <!-- ══ THE MARGIN ══ -->
         <section class="view" id="view-thoughts">
           <div class="margin-head">
-            <textarea id="thInput" class="inp area big" rows="2" placeholder="A thought, half-formed. ⌘/Ctrl+Enter to keep it."></textarea>
+            <textarea id="thInput" class="inp area big" rows="2" placeholder="A thought, half-formed. ⌘/Ctrl+Enter to keep it, or paste/attach a picture."></textarea>
+            <div class="margin-attach" id="thAttachPreview" hidden>
+              <div class="margin-attach-thumb" id="thAttachThumb"></div>
+              <button class="margin-attach-x" id="thAttachRemove" title="Remove picture">✕</button>
+            </div>
             <div class="margin-controls">
               <div class="seg" id="thKind"><button data-k="thought" class="on">Thought</button><button data-k="quote">Quote</button></div>
               <input id="thWho" class="inp" placeholder="Said by…" hidden>
+              <button class="margin-attach-btn" id="thAttachBtn" title="Attach a picture">📎</button>
+              <input type="file" id="thAttachFile" accept="image/*" hidden>
               <input id="thSearch" class="inp" placeholder="Search / #tag">
             </div>
           </div>

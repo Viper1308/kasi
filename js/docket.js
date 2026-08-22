@@ -1155,5 +1155,33 @@ async function init() {
   renderCurrentView();
 }
 
-return { init };
+/* ---------- section-progress reader, used by the Dashboard's tracker ----------
+   Reads straight from Store (same place window.storage ultimately writes to),
+   so it stays accurate without needing an exam tab to be open or Docket.init()
+   to have run yet. Accepts one section key or an array (so e.g. Grade 12's two
+   Economics sections can be reported as a single combined "Economics" figure). */
+function sectionProgress(examKey, sectionKeyOrKeys) {
+  const exam = EXAMS[examKey];
+  if (!exam) return { total: 0, checked: 0, pct: 0 };
+  const wanted = Array.isArray(sectionKeyOrKeys) ? sectionKeyOrKeys : [sectionKeyOrKeys];
+  let st = {};
+  try {
+    const raw = Store.get('docket.' + exam.storageKey, null);
+    if (raw) st = JSON.parse(raw);
+  } catch (e) { st = {}; }
+  let total = 0, checked = 0;
+  exam.sections.filter(s => wanted.includes(s.key)).forEach(sec => {
+    sec.groups.forEach((g, gi) => {
+      total += g.items.length;
+      g.items.forEach(item => { if (st[itemId(sec.key, gi, item)]) checked++; });
+    });
+    if (sec.isGk) {
+      total += GK_MONTHS.length;
+      GK_MONTHS.forEach(m => { if (st['gk-month__' + m.key]) checked++; });
+    }
+  });
+  return { total, checked, pct: total ? Math.round((checked / total) * 100) : 0 };
+}
+
+return { init, sectionProgress };
 })();

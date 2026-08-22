@@ -515,7 +515,33 @@ h1,h2,h3,h4{margin:0;font-weight:600;letter-spacing:-.01em}
 .note-card .when{font-family:var(--mono);font-size:10px;color:var(--faint);margin-top:9px}
 .note-card .x{position:absolute;top:8px;right:9px}
 .note-card:hover .x{opacity:1}
+.note-card.has-img{padding-top:0;overflow:hidden}
+.note-card.has-img p,.note-card.has-img .who,.note-card.has-img .when{padding-left:16px;padding-right:16px}
+.note-card.has-img .when{padding-bottom:14px}
+.note-card.has-img p:first-of-type{padding-top:12px}
+.note-img{
+  width:100%;aspect-ratio:4/3;background-size:cover;background-position:center;background-color:var(--panel-2);
+  cursor:pointer;transition:filter .15s;
+}
+.note-img:hover{filter:brightness(1.08)}
 .tag{color:var(--cyan);cursor:pointer}
+
+/* margin — image attach */
+.margin-attach-btn{
+  background:var(--panel-2);border:1px solid var(--line);border-radius:8px;
+  width:36px;height:36px;font-size:15px;cursor:pointer;color:var(--dim);flex:none;
+}
+.margin-attach-btn:hover{color:var(--amber);border-color:var(--amber)}
+.margin-attach{display:flex;align-items:center;gap:10px;margin-top:9px}
+.margin-attach-thumb{
+  width:64px;height:64px;border-radius:8px;background-size:cover;background-position:center;
+  background-color:var(--panel-2);border:1px solid var(--line);flex:none;
+}
+.margin-attach-x{
+  background:var(--panel-2);border:1px solid var(--line);border-radius:50%;
+  width:24px;height:24px;color:var(--dim);cursor:pointer;font-size:11px;
+}
+.margin-attach-x:hover{color:var(--bad);border-color:var(--bad)}
 
 /* ═══════════ 6. THE BOARD ═══════════ */
 /* the tool bar floats OVER the board, so opening it never shifts anything */
@@ -945,7 +971,7 @@ html,body{overscroll-behavior:none;-webkit-text-size-adjust:100%}
   .quick-nav{flex-direction:column;padding:11px 6px 9px;text-align:center}
   .qn-ic{width:22px;height:22px}
   .quick-nav span{font-size:9.5px}
-  .dash-side-tiles{grid-template-columns:repeat(4,1fr)}
+  #dashExamProg{grid-template-columns:1fr}
   .desk-clock-pill{display:none}
   .settings-gear{top:calc(env(safe-area-inset-top) + 10px);right:10px;width:34px;height:34px}
 
@@ -1109,8 +1135,6 @@ html,body{overscroll-behavior:none;-webkit-text-size-adjust:100%}
 .dash-gallery-btn span{font-family:var(--disp);font-size:12.5px;font-weight:600;flex:1}
 .dash-gallery-btn b{font-family:var(--mono);font-size:11px;background:var(--line);padding:1px 7px;border-radius:20px;color:var(--ink);font-weight:600}
 
-.dash-side-tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:auto;padding-top:10px}
-
 /* ── main column ── */
 .dash-main{flex:1;min-width:0;overflow-y:auto;overflow-x:hidden;padding:24px clamp(16px,3vw,34px) 44px;}
 .dash-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
@@ -1126,6 +1150,7 @@ html,body{overscroll-behavior:none;-webkit-text-size-adjust:100%}
 .dash-count{font-family:var(--mono);font-size:10px;color:var(--faint);text-transform:none;letter-spacing:0;font-weight:400}
 .dash-empty{font-family:var(--read);font-style:italic;font-size:12.5px;color:var(--faint);line-height:1.5}
 
+.dash-examprog{grid-column:span 4}
 .dash-todo{grid-column:span 2;grid-row:span 2}
 .dash-radar{grid-column:span 1;grid-row:span 2}
 .dash-pomo{grid-column:span 1;grid-row:span 2}
@@ -1184,6 +1209,12 @@ html,body{overscroll-behavior:none;-webkit-text-size-adjust:100%}
 .pomo-controls{display:flex;gap:8px}
 .pomo-start{flex:1;background:var(--amber);color:#0a0a0c;border:0;font-weight:700}
 .pomo-start:hover{filter:brightness(1.08)}
+.pomo-popout-btn{
+  margin-left:auto;background:none;border:1px solid var(--line);border-radius:6px;
+  width:22px;height:22px;color:var(--faint);cursor:pointer;font-size:12px;line-height:1;
+  text-transform:none;letter-spacing:0;
+}
+.pomo-popout-btn:hover{color:var(--amber);border-color:var(--amber)}
 
 /* stats donut */
 .dash-stats-row{display:flex;align-items:center;gap:14px}
@@ -1199,10 +1230,16 @@ html,body{overscroll-behavior:none;-webkit-text-size-adjust:100%}
 .dash-bars-svg{width:100%;height:130px}
 .dash-bar-lbl{font-family:var(--mono);font-size:9px;fill:var(--faint)}
 
-/* sidebar tiles */
-.dash-tile{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:9px 6px;text-align:center}
-.dash-tile b{display:block;font-family:var(--disp);font-weight:700;font-size:16px;color:var(--amber)}
-.dash-tile span{font-family:var(--mono);font-size:7.5px;letter-spacing:.02em;color:var(--faint);text-transform:uppercase}
+/* exam progress — the 13 sectionals from The Docket */
+.dash-examprog h4{margin-bottom:14px}
+#dashExamProg{display:grid;grid-template-columns:repeat(3,1fr);gap:18px 22px}
+.examprog-group-name{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);margin-bottom:8px}
+.examprog-rows{display:flex;flex-direction:column;gap:9px}
+.examprog-row{display:grid;grid-template-columns:1fr 70px 34px;align-items:center;gap:9px}
+.examprog-label{font-size:12px;color:var(--dim);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.examprog-bar{height:5px;border-radius:3px;background:var(--line);overflow:hidden}
+.examprog-bar i{display:block;height:100%;border-radius:3px;background:var(--cyan)}
+.examprog-pct{font-size:10.5px;color:var(--faint);text-align:right}
 
 /* upcoming */
 .dash-up-row{display:flex;align-items:center;gap:9px;padding:6px 2px;font-size:12.5px}
@@ -1287,6 +1324,7 @@ html,body{overscroll-behavior:none;-webkit-text-size-adjust:100%}
 /* ═══════════ DASHBOARD — RESPONSIVE ═══════════ */
 @media (max-width:1300px){
   .dash-grid{grid-template-columns:repeat(2,1fr)}
+  .dash-examprog{grid-column:span 2}
   .dash-todo{grid-column:span 2}
   .dash-radar{grid-column:span 1}
   .dash-pomo{grid-column:span 1}
@@ -1298,7 +1336,7 @@ html,body{overscroll-behavior:none;-webkit-text-size-adjust:100%}
   .dash-wrap{flex-direction:column;overflow-y:auto}
   .dash-main{padding:16px 12px 84px}
   .dash-grid{grid-template-columns:1fr}
-  .dash-todo,.dash-radar,.dash-pomo,.dash-stats,.dash-bars,.dash-upcoming,.dash-reading,.dash-thoughts,.dash-stacks,.dash-gallery-box{grid-column:span 1}
+  .dash-examprog,.dash-todo,.dash-radar,.dash-pomo,.dash-stats,.dash-bars,.dash-upcoming,.dash-reading,.dash-thoughts,.dash-stacks,.dash-gallery-box{grid-column:span 1}
   .gallery-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))}
 }
 

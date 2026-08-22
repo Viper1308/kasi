@@ -67,7 +67,7 @@ const Dashboard = (() => {
         <span class="pill ${pillCls}">${pillText}</span>
         ${t.date ? `<span class="dash-todo-when${overdue ? ' late' : ''}">${t.date === today ? 'Today' : fmtShort(t.date)}</span>` : ''}
         <button class="dash-todo-x" aria-label="Remove">✕</button>`;
-      row.querySelector('.dash-check').onclick = () => { Cal.dashToggleTask(t.id); renderTodo(); renderStats(); renderTiles(); renderRadar(); };
+      row.querySelector('.dash-check').onclick = () => { Cal.dashToggleTask(t.id); renderTodo(); renderStats(); renderRadar(); };
       row.querySelector('.dash-todo-x').onclick = () => { Cal.dashRemoveTask(t.id); renderTodo(); renderStats(); renderUpcoming(); };
       host.appendChild(row);
     });
@@ -84,7 +84,7 @@ const Dashboard = (() => {
       const t = inp.value.trim(); if (!t) return;
       Cal.dashAddTask(t, null);
       inp.value = '';
-      renderTodo(); renderStats(); renderTiles(); renderRadar();
+      renderTodo(); renderStats(); renderRadar();
     });
   }
 
@@ -142,20 +142,54 @@ const Dashboard = (() => {
     svg.innerHTML = bars;
   }
 
-  /* ---------------- tiles ---------------- */
-  function renderTiles() {
-    const host = document.getElementById('dashTiles');
+  /* ---------------- exam progress — the 13 sectionals across The Docket ---------------- */
+  const EXAM_PROGRESS_GROUPS = [
+    { label: 'CLAT 2027', rows: [
+      { label: 'Quantitative Techniques', exam: 'clat', sections: 'quant' },
+      { label: 'Logical Reasoning', exam: 'clat', sections: 'logical' },
+      { label: 'English', exam: 'clat', sections: 'english' },
+      { label: 'Legal Reasoning', exam: 'clat', sections: 'legal' },
+      { label: 'General Knowledge', exam: 'clat', sections: 'gk' }
+    ]},
+    { label: 'IIM Bangalore UGAT', rows: [
+      { label: 'Quant + Data Interpretation', exam: 'iimb', sections: 'quant' },
+      { label: 'English', exam: 'iimb', sections: 'english' },
+      { label: 'Logical Reasoning', exam: 'iimb', sections: 'logical' }
+    ]},
+    { label: 'Grade 12 Commerce', rows: [
+      { label: 'English', exam: 'grade12', sections: 'english' },
+      { label: 'Applied Mathematics', exam: 'grade12', sections: 'appmath' },
+      { label: 'Economics', exam: 'grade12', sections: ['macro', 'ied'] },
+      { label: 'Accountancy', exam: 'grade12', sections: 'acc' },
+      { label: 'Business Studies', exam: 'grade12', sections: 'bst' }
+    ]}
+  ];
+
+  function renderExamProgress() {
+    const host = document.getElementById('dashExamProg');
     if (!host) return;
-    const books = Store.get('books', []);
-    const thoughts = Store.get('thoughts', []);
-    const stacks = Store.get('stk.stacks', []);
-    const tiles = [
-      { n: books.filter(b => b.status === 'read').length, l: 'books finished' },
-      { n: thoughts.length, l: 'thoughts kept' },
-      { n: stacks.length, l: 'projects going' },
-      { n: Gallery.count(), l: 'pictures kept' }
-    ];
-    host.innerHTML = tiles.map(t => `<div class="dash-tile"><b>${t.n}</b><span>${t.l}</span></div>`).join('');
+    if (typeof Docket === 'undefined' || !Docket.sectionProgress) {
+      host.innerHTML = `<p class="dash-empty">The Docket hasn't loaded yet.</p>`;
+      return;
+    }
+    let grandTotal = 0, grandChecked = 0;
+    host.innerHTML = EXAM_PROGRESS_GROUPS.map(group => {
+      const rows = group.rows.map(r => {
+        const p = Docket.sectionProgress(r.exam, r.sections);
+        grandTotal += p.total; grandChecked += p.checked;
+        return `<div class="examprog-row">
+          <span class="examprog-label">${esc(r.label)}</span>
+          <div class="examprog-bar"><i style="width:${p.pct}%"></i></div>
+          <span class="examprog-pct mono">${p.pct}%</span>
+        </div>`;
+      }).join('');
+      return `<div class="examprog-group">
+        <div class="examprog-group-name">${esc(group.label)}</div>
+        <div class="examprog-rows">${rows}</div>
+      </div>`;
+    }).join('');
+    const totalEl = document.getElementById('dashExamProgTotal');
+    if (totalEl) totalEl.textContent = grandTotal ? `${Math.round((grandChecked / grandTotal) * 100)}% overall` : '';
   }
 
   /* ---------------- upcoming ---------------- */
@@ -199,7 +233,7 @@ const Dashboard = (() => {
     if (!list.length) { host.innerHTML = `<p class="dash-empty">Nothing jotted down yet.</p>`; return; }
     host.innerHTML = list.map(t => `
       <div class="dash-thought${t.kind === 'quote' ? ' quote' : ''}">
-        <p>${esc(t.text.length > 120 ? t.text.slice(0, 118) + '…' : t.text)}</p>
+        <p>${t.img ? '📎 ' : ''}${esc(t.text ? (t.text.length > 120 ? t.text.slice(0, 118) + '…' : t.text) : '(picture only)')}</p>
         ${t.who ? `<span>— ${esc(t.who)}</span>` : ''}
       </div>`).join('');
   }
@@ -280,36 +314,83 @@ const Dashboard = (() => {
       ${labels}`;
   }
 
-  /* ---------------- pomodoro / focus timer ---------------- */
+  /* ---------------- pomodoro / focus timer ----------------
+     Timestamp-based, not tick-decremented: the displayed number is always
+     computed from (endAt - now), so a throttled/backgrounded tab can't make
+     it drift or "pause" — the moment a tick does fire (or the tab regains
+     focus) it snaps back to the correct value. State lives in Store, so the
+     popout window (a real separate browser window, same origin) reads and
+     writes the exact same key and both stay in sync via the 'storage' event. */
+  const POMO_KEY = 'pomo.state';
   const POMO_DURATIONS = { focus: 25 * 60, short: 5 * 60, long: 15 * 60 };
-  let pomoMode = 'focus', pomoLeft = POMO_DURATIONS.focus, pomoRunning = false, pomoHandle = null;
+  let pomoTickHandle = null;
+  let pomoLastCompletedAt = 0;
 
+  function pomoDefaultState() { return { mode: 'focus', running: false, endAt: null, remaining: POMO_DURATIONS.focus, completedAt: null }; }
+  function pomoLoad() { return Store.get(POMO_KEY, pomoDefaultState()); }
+  function pomoSave(st) { Store.set(POMO_KEY, st); }
+  function pomoRemaining(st) {
+    if (!st.running) return st.remaining;
+    return Math.max(0, Math.round((st.endAt - Date.now()) / 1000));
+  }
   function pomoFmt(s) { const m = Math.floor(s / 60), r = s % 60; return `${String(m).padStart(2, '0')}:${String(r).padStart(2, '0')}`; }
+
   function pomoPaint() {
+    const st = pomoLoad();
+    const remaining = pomoRemaining(st);
     const t = document.getElementById('pomoTime');
-    if (t) t.textContent = pomoFmt(pomoLeft);
+    if (t) t.textContent = pomoFmt(remaining);
     const btn = document.getElementById('pomoStart');
-    if (btn) btn.textContent = pomoRunning ? 'Pause' : (pomoLeft === POMO_DURATIONS[pomoMode] ? 'Start' : 'Resume');
+    if (btn) btn.textContent = st.running ? 'Pause' : (remaining === POMO_DURATIONS[st.mode] ? 'Start' : 'Resume');
+    document.querySelectorAll('.pomo-tab').forEach(b => b.classList.toggle('on', b.dataset.mode === st.mode));
+
+    if (st.running && remaining <= 0 && st.completedAt !== pomoLastCompletedAt) {
+      pomoLastCompletedAt = st.completedAt || Date.now();
+      const finished = { ...st, running: false, remaining: 0, endAt: null, completedAt: pomoLastCompletedAt };
+      pomoSave(finished);
+      toast(st.mode === 'focus' ? 'Focus block done — take a break.' : 'Break over — back to it.');
+      pomoPaint();
+    }
   }
-  function pomoTick() {
-    pomoLeft = Math.max(0, pomoLeft - 1);
+  function pomoStart() {
+    const st = pomoLoad();
+    if (st.running) return;
+    const remaining = pomoRemaining(st);
+    pomoSave({ ...st, running: true, endAt: Date.now() + remaining * 1000 });
     pomoPaint();
-    if (pomoLeft === 0) { pomoStop(); toast(pomoMode === 'focus' ? 'Focus block done — take a break.' : 'Break over — back to it.'); }
   }
-  function pomoStart() { if (pomoRunning) return; pomoRunning = true; pomoHandle = setInterval(pomoTick, 1000); pomoPaint(); }
-  function pomoStop() { pomoRunning = false; clearInterval(pomoHandle); pomoPaint(); }
-  function pomoReset() { pomoStop(); pomoLeft = POMO_DURATIONS[pomoMode]; pomoPaint(); }
+  function pomoPause() {
+    const st = pomoLoad();
+    if (!st.running) return;
+    pomoSave({ ...st, running: false, remaining: pomoRemaining(st), endAt: null });
+    pomoPaint();
+  }
+  function pomoReset() {
+    const st = pomoLoad();
+    pomoSave({ ...st, running: false, remaining: POMO_DURATIONS[st.mode], endAt: null });
+    pomoPaint();
+  }
   function pomoSetMode(mode) {
-    pomoMode = mode; pomoStop(); pomoLeft = POMO_DURATIONS[mode]; pomoPaint();
-    document.querySelectorAll('.pomo-tab').forEach(b => b.classList.toggle('on', b.dataset.mode === mode));
+    pomoSave({ mode, running: false, remaining: POMO_DURATIONS[mode], endAt: null, completedAt: null });
+    pomoPaint();
+  }
+  function pomoOpenPopout() {
+    const w = window.open('pomodoro.html', 'kasiPomodoro', 'width=300,height=400,resizable=yes,menubar=no,toolbar=no,location=no,status=no');
+    if (!w) toast("Couldn't open the popout — check your browser's pop-up blocker.");
   }
   function wirePomodoro() {
     const tabs = document.getElementById('pomoTabs');
     if (!tabs || tabs._wired) { pomoPaint(); return; }
     tabs._wired = true;
     tabs.querySelectorAll('.pomo-tab').forEach(b => b.onclick = () => pomoSetMode(b.dataset.mode));
-    document.getElementById('pomoStart').onclick = () => pomoRunning ? pomoStop() : pomoStart();
+    document.getElementById('pomoStart').onclick = () => pomoLoad().running ? pomoPause() : pomoStart();
     document.getElementById('pomoReset').onclick = pomoReset;
+    const popBtn = document.getElementById('pomoPopout');
+    if (popBtn) popBtn.onclick = pomoOpenPopout;
+
+    if (!pomoTickHandle) pomoTickHandle = setInterval(pomoPaint, 500);
+    window.addEventListener('storage', e => { if (e.key === 'pos:' + POMO_KEY) pomoPaint(); });
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) pomoPaint(); });
     pomoPaint();
   }
 
@@ -320,7 +401,7 @@ const Dashboard = (() => {
     renderTodo();
     renderStats();
     renderBars();
-    renderTiles();
+    renderExamProgress();
     renderUpcoming();
     renderReading();
     renderThoughts();

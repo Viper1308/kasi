@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Focus timer — KASI</title>
+<link rel="icon" href="data:,">
+<style>
+  :root{
+    --room:#0c0c0e; --panel:#151517; --panel-2:#1b1b1f; --line:#26262b;
+    --ink:#eceef0; --dim:#9a9ca3; --faint:#5c5e66; --amber:#7dd3a8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--room);color:var(--ink);
+    font-family:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:18px;padding:20px;-webkit-app-region:drag;user-select:none;
+  }
+  .brand{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:10px;letter-spacing:.2em;color:var(--faint);text-transform:uppercase}
+  .tabs{display:flex;gap:4px;background:var(--panel-2);border-radius:9px;padding:3px;-webkit-app-region:no-drag}
+  .tab{
+    flex:1;background:none;border:0;border-radius:7px;padding:7px 10px;cursor:pointer;
+    font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.02em;color:var(--faint);transition:.15s;
+  }
+  .tab.on{background:var(--line);color:var(--ink)}
+  .time{
+    font-family:"JetBrains Mono",monospace;font-weight:700;font-size:72px;letter-spacing:.01em;
+    color:var(--ink);line-height:1;
+  }
+  .mode-label{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+  .controls{display:flex;gap:10px;width:100%;max-width:220px;-webkit-app-region:no-drag}
+  button{font-family:inherit;cursor:pointer}
+  .start{
+    flex:1;background:var(--amber);color:#0a0a0c;border:0;border-radius:9px;
+    padding:11px;font-weight:700;font-size:14px;letter-spacing:.04em;transition:filter .15s;
+  }
+  .start:hover{filter:brightness(1.08)}
+  .reset{
+    background:none;border:1px solid var(--line);border-radius:9px;color:var(--dim);
+    width:42px;font-size:16px;
+  }
+  .reset:hover{color:var(--amber);border-color:var(--amber)}
+  .hint{font-size:10.5px;color:var(--faint);text-align:center;max-width:220px;line-height:1.4}
+</style>
+</head>
+<body>
+  <div class="brand">KASI · Focus Timer</div>
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-mode="focus">Focus</button>
+    <button class="tab" data-mode="short">Short break</button>
+    <button class="tab" data-mode="long">Long break</button>
+  </div>
+  <div class="mode-label" id="modeLabel">Focus block</div>
+  <div class="time" id="time">25:00</div>
+  <div class="controls">
+    <button class="start" id="startBtn">Start</button>
+    <button class="reset" id="resetBtn" title="Reset">↺</button>
+  </div>
+  <div class="hint">This window stays in sync with the Dashboard — start it here, or there, either way. Keep this window open and visible on screen while you work; it won't be throttled the way a background browser tab is.</div>
+
+<script src="js/store.js"></script>
+<script>
+(function(){
+  const POMO_KEY = 'pomo.state';
+  const DURATIONS = { focus: 25 * 60, short: 5 * 60, long: 15 * 60 };
+  const MODE_LABEL = { focus: 'Focus block', short: 'Short break', long: 'Long break' };
+  let lastCompletedAt = 0;
+
+  function defaultState() { return { mode: 'focus', running: false, endAt: null, remaining: DURATIONS.focus, completedAt: null }; }
+  function load() { return Store.get(POMO_KEY, defaultState()); }
+  function save(st) { Store.set(POMO_KEY, st); }
+  function remainingOf(st) { return st.running ? Math.max(0, Math.round((st.endAt - Date.now()) / 1000)) : st.remaining; }
+  function fmt(s) { const m = Math.floor(s / 60), r = s % 60; return String(m).padStart(2, '0') + ':' + String(r).padStart(2, '0'); }
+
+  const timeEl = document.getElementById('time');
+  const startBtn = document.getElementById('startBtn');
+  const modeLabel = document.getElementById('modeLabel');
+
+  function paint() {
+    const st = load();
+    const remaining = remainingOf(st);
+    timeEl.textContent = fmt(remaining);
+    startBtn.textContent = st.running ? 'Pause' : (remaining === DURATIONS[st.mode] ? 'Start' : 'Resume');
+    modeLabel.textContent = MODE_LABEL[st.mode] || 'Focus block';
+    document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.mode === st.mode));
+    document.title = (st.running ? fmt(remaining) + ' · ' : '') + 'Focus timer — KASI';
+
+    if (st.running && remaining <= 0 && st.completedAt !== lastCompletedAt) {
+      lastCompletedAt = st.completedAt || Date.now();
+      save({ ...st, running: false, remaining: 0, endAt: null, completedAt: lastCompletedAt });
+      paint();
+    }
+  }
+
+  function start() {
+    const st = load();
+    if (st.running) return;
+    const remaining = remainingOf(st);
+    save({ ...st, running: true, endAt: Date.now() + remaining * 1000 });
+    paint();
+  }
+  function pause() {
+    const st = load();
+    if (!st.running) return;
+    save({ ...st, running: false, remaining: remainingOf(st), endAt: null });
+    paint();
+  }
+  function reset() {
+    const st = load();
+    save({ ...st, running: false, remaining: DURATIONS[st.mode], endAt: null });
+    paint();
+  }
+  function setMode(mode) {
+    save({ mode, running: false, remaining: DURATIONS[mode], endAt: null, completedAt: null });
+    paint();
+  }
+
+  document.querySelectorAll('.tab').forEach(b => b.onclick = () => setMode(b.dataset.mode));
+  startBtn.onclick = () => load().running ? pause() : start();
+  document.getElementById('resetBtn').onclick = reset;
+  window.addEventListener('storage', e => { if (e.key === 'pos:' + POMO_KEY) paint(); });
+
+  setInterval(paint, 500);
+  paint();
+})();
+</script>
+</body>
+</html>
