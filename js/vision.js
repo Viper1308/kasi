@@ -210,32 +210,46 @@ const Board = (() => {
   const selItems = () => items.filter(i => sel.has(i.id));
 
   /* ---------------- adding ---------------- */
-  /* several pictures at once land in a tidy grid, all the same scale —
-     the way Word or Canva drops a batch in, not scattered at random */
+  /* A batch of pictures — even 50 or 60 at once, pasted or dropped together —
+     is packed into a Pinterest-style masonry layout: a fixed number of columns
+     (scaled to the batch size), each picture keeping its own aspect ratio, each
+     one landing at the bottom of whichever column is currently shortest. Gaps
+     stay perfectly even in both directions; only the column heights vary. */
   function addImages(files, at) {
     const list = [...files].filter(f => f.type.startsWith('image/'));
     if (!list.length) return;
     const origin = at || centreWorld();
-    const CELL = 260, GAP = 18, PER = Math.min(3, list.length);
-    let done = 0;
-    const made = [];
-    list.forEach((f, i) => {
-      shrink(f, 1400, (url, w, h) => {
+    const GAP = 16, COLW = 220;
+    const columns = Math.max(1, Math.min(9, Math.min(list.length, Math.round(Math.sqrt(list.length * 1.4)))));
+    const colHeights = new Array(columns).fill(0);
+
+    // measure every picture first (preserving original order via Promise.all),
+    // so column heights are packed deterministically rather than by whichever
+    // finishes shrinking first
+    Promise.all(list.map(f => new Promise(resolve => shrink(f, 1400, (url, w, h) => resolve({ url, w, h }))))).then(measured => {
+      const placed = measured.map(m => {
+        const dispW = COLW, dispH = Math.round(m.h * (COLW / m.w));
+        let ci = 0;
+        for (let c = 1; c < columns; c++) if (colHeights[c] < colHeights[ci]) ci = c;
+        const x = origin.x + ci * (COLW + GAP), y = origin.y + colHeights[ci];
+        colHeights[ci] += dispH + GAP;
+        return { url: m.url, x: Math.round(x), y: Math.round(y), w: dispW, h: dispH };
+      });
+
+      let done = 0;
+      const made = [];
+      const z0 = topZ();
+      placed.forEach((p, i) => {
         const id = uid();
-        const s = Math.min(1, CELL / Math.max(w, h));
-        const it = {
-          id, type: 'img',
-          x: Math.round(origin.x + (i % PER) * (CELL + GAP)),
-          y: Math.round(origin.y + Math.floor(i / PER) * (CELL + GAP)),
-          w: Math.round(w * s), h: Math.round(h * s), z: topZ() + 1 + i
-        };
-        imgCache.set(id, url);
-        Store.putImg('vb:' + id, url).then(() => {
-          if (typeof Gallery !== 'undefined') Gallery.add(url, { boardId: activeId, boardName: active().name, kind: 'pinned' });
+        const it = { id, type: 'img', x: p.x, y: p.y, w: p.w, h: p.h, z: z0 + 1 + i };
+        imgCache.set(id, p.url);
+        Store.putImg('vb:' + id, p.url).then(() => {
+          if (typeof Gallery !== 'undefined') Gallery.add(p.url, { boardId: activeId, boardName: active().name, kind: 'pinned' });
           items.push(it); made.push(id); done++;
-          if (done === list.length) {
+          if (done === placed.length) {
             saveItems(); sel = new Set(made); render();
-            if (list.length > 1) toast(`${list.length} pictures placed in line.`);
+            if (placed.length > 1) toast(`${placed.length} pictures arranged, Pinterest-style, into ${columns} column${columns === 1 ? '' : 's'}.`);
+            if (placed.length > 8) fitAll();
           }
         });
       });
