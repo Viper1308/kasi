@@ -65,10 +65,6 @@
           <svg class="qn-ic" viewBox="0 0 40 40"><line x1="10" y1="12" x2="30" y2="12" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="18" x2="26" y2="18" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="24" x2="22" y2="24" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="30" x2="18" y2="30" stroke="currentColor" stroke-width="1.5"/></svg>
           <span>The Margin</span>
         </button>
-        <button class="quick-nav dock-tile" data-view="vision" title="The Board">
-          <svg class="qn-ic" viewBox="0 0 40 40"><rect x="7" y="8" width="14" height="10" rx="1.5"/><rect x="23" y="8" width="10" height="15" rx="1.5"/><rect x="7" y="20" width="10" height="12" rx="1.5"/><rect x="19" y="25" width="14" height="7" rx="1.5"/></svg>
-          <span>The Board</span>
-        </button>
         <button class="quick-nav dock-tile" data-view="docket" title="The Docket">
           <svg class="qn-ic" viewBox="0 0 40 40"><rect x="9" y="5" width="22" height="30" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M15 13h10M15 19h10M15 25h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M22 22l2 2 4-4" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
           <span>The Docket</span>
@@ -241,7 +237,6 @@
         <button class="tab" data-view="stacks"><svg viewBox="0 0 40 40"><rect x="7" y="25" width="26" height="6" rx="1.5"/><rect x="9" y="18" width="22" height="6" rx="1.5"/><rect x="11" y="11" width="18" height="6" rx="1.5"/></svg><span>The Stacks</span></button>
         <button class="tab" data-view="calendar"><svg viewBox="0 0 40 40"><rect x="8" y="10" width="24" height="22" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="16" x2="32" y2="16" stroke="currentColor" stroke-width="1.5"/></svg><span>Calendar</span></button>
         <button class="tab" data-view="thoughts"><svg viewBox="0 0 40 40"><line x1="10" y1="12" x2="30" y2="12" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="18" x2="26" y2="18" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="24" x2="22" y2="24" stroke="currentColor" stroke-width="1.5"/></svg><span>Margin</span></button>
-        <button class="tab" data-view="vision"><svg viewBox="0 0 40 40"><rect x="7" y="8" width="14" height="10" rx="1.5"/><rect x="23" y="8" width="10" height="15" rx="1.5"/><rect x="7" y="20" width="10" height="12" rx="1.5"/></svg><span>Board</span></button>
         <button class="tab" data-view="docket"><svg viewBox="0 0 40 40"><rect x="9" y="5" width="22" height="30" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M15 13h10M15 19h10M15 25h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span>Docket</span></button>
       </div>
       <div class="top-right">
@@ -300,28 +295,16 @@
 
         <!-- ══ THE STACKS ══ -->
         <section class="view" id="view-stacks">
-          <div class="stk-wrap">
-            <div class="stk-tools">
-              <button class="tool" id="stkAdd">New stack</button>
-              <button class="tool" id="stkTidy" title="Line every pile up on the floor">Tidy floor</button>
-              <button class="tool" id="stkFit">Fit view</button>
-              <span class="stk-zoomer">
-                <button class="tool tiny" id="stkOut">−</button>
-                <b id="stkZoom">100%</b>
-                <button class="tool tiny" id="stkIn">+</button>
-              </span>
-              <span class="tool-hint" id="stkHint">Drag the floor to walk around · scroll or pinch to zoom · drag a pile to move it · tap a pile to look at it side-on</span>
+          <div class="proj-wrap">
+            <div class="proj-tools">
+              <button class="tool" id="stkAdd">New project</button>
+              <span class="tool-hint">Break each project into steps, and check them off as you go.</span>
             </div>
-            <div class="stk-room" id="stkRoom">
-              <div class="stk-floor" id="stkFloor">
-                <div class="stk-rug"></div>
-              </div>
-              <div class="stk-empty" id="stkEmpty" hidden>
-                <b>The floor is bare.</b>
-                <span>Make a stack. The top book is step one — everything under it is what comes next.</span>
-              </div>
+            <div class="proj-list" id="stkList"></div>
+            <div class="proj-empty" id="stkEmpty" hidden>
+              <b>No projects yet.</b>
+              <span>Create one and break it into steps — the first step is step one, everything after is what comes next.</span>
             </div>
-            <div class="stk-side" id="stkSide" hidden></div>
           </div>
         </section>
 
@@ -398,64 +381,6 @@
           <div class="margin-grid" id="thList"></div>
         </section>
 
-        <!-- ══ THE BOARD ══ -->
-        <section class="view" id="view-vision">
-          <div class="vb-tabbar">
-            <div class="vb-tabs" id="vbTabList"></div>
-            <button class="vb-tabadd" id="vbTabAdd" title="New board">+</button>
-          </div>
-          <div class="board-tools" id="boardTools">
-            <div class="bt-bar">
-              <span class="bt-title" id="vbBoardName">Board</span>
-              <span class="bt-hint">Drag a box to select · shift-click to add · ⌘/Ctrl+C then ⌘/Ctrl+V keeps the arrangement · space-drag to pan</span>
-              <span class="bt-sel" id="vbSelCount"></span>
-              <button class="bt-toggle" id="vbToolsToggle" aria-expanded="false" title="Show tools">
-                <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
-            </div>
-            <div class="bt-body">
-              <div class="bt-group">
-                <label class="file-btn">Add pictures<input type="file" id="vbFile" accept="image/*" multiple hidden></label>
-                <button class="btn ghost" id="vbNote">Add note</button>
-                <button class="btn ghost" id="vbBgBtn">Background…</button>
-              </div>
-              <div class="bt-group">
-                <button class="btn ghost" id="vbCopy" title="⌘/Ctrl+C">Copy</button>
-                <button class="btn ghost" id="vbPaste" title="⌘/Ctrl+V">Paste</button>
-                <button class="btn ghost" id="vbDupe" title="⌘/Ctrl+D">Duplicate</button>
-                <button class="btn ghost" id="vbSelAll">Select all</button>
-              </div>
-              <div class="bt-group" id="vbAlign">
-                <span class="bt-glabel">Align</span>
-                <button class="icn" data-a="left" title="Align left">⌐</button>
-                <button class="icn" data-a="cx" title="Centre across">┼</button>
-                <button class="icn" data-a="right" title="Align right">¬</button>
-                <button class="icn" data-a="top" title="Align top">⌃</button>
-                <button class="icn" data-a="cy" title="Centre down">≡</button>
-                <button class="icn" data-a="bottom" title="Align bottom">⌄</button>
-                <button class="icn wide" data-a="row" title="Lay out in a row">Row</button>
-                <button class="icn wide" data-a="grid" title="Lay out in a grid">Grid</button>
-              </div>
-              <div class="bt-group">
-                <button class="btn ghost" id="vbFront">Bring to front</button>
-                <button class="btn ghost danger" id="vbDel">Delete</button>
-              </div>
-              <div class="bt-group">
-                <button class="icn" id="vbOut">−</button>
-                <b class="bt-zoom" id="vbZoom">100%</b>
-                <button class="icn" id="vbIn">+</button>
-                <button class="btn ghost" id="vbFit">Fit</button>
-              </div>
-            </div>
-          </div>
-          <div class="board" id="board" tabindex="0">
-            <div class="board-plane" id="boardPlane"></div>
-            <div class="marquee" id="vbMarquee" hidden></div>
-            <div class="board-empty" id="vbEmpty">Nothing pinned yet. Add a picture, or paste one straight in.</div>
-          </div>
-          <div class="vb-bgpanel hidden" id="vbBgPanel"></div>
-        </section>
-
         <!-- ══ THE DOCKET ══ -->
         <section class="view" id="view-docket">
         <div id="ep-root">
@@ -509,14 +434,14 @@
     </div>
   </div>
 
-  <!-- ── GALLERY (every picture ever pinned to the Board, kept even after it's removed there) ── -->
+  <!-- ── GALLERY (pictures saved from projects and notes) ── -->
   <div id="galleryModal" class="gallery-modal hidden">
     <div class="gallery-backdrop" id="galleryBackdrop"></div>
     <div class="gallery-card">
       <div class="gallery-head">
         <div>
           <h2>Gallery</h2>
-          <p class="gallery-sub" id="gallerySub">Everything you've ever pinned to the Board.</p>
+          <p class="gallery-sub" id="gallerySub">Pictures you've saved.</p>
         </div>
         <button class="settings-close" id="galleryClose">✕</button>
       </div>
@@ -544,7 +469,6 @@
 <script src="js/calendar.js"></script>
 <script src="js/thoughts.js"></script>
 <script src="js/stacks.js"></script>
-<script src="js/vision.js"></script>
 <script src="js/gallery.js"></script>
 <script src="js/dashboard.js"></script>
 <script src="js/docket.js"></script>

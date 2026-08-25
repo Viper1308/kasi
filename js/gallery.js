@@ -63,8 +63,8 @@ const Gallery = (() => {
   function openModal() {
     document.getElementById('galleryModal').classList.remove('hidden');
     document.getElementById('gallerySub').textContent =
-      list.length ? `${list.length} picture${list.length === 1 ? '' : 's'} — kept here even if you remove them from the Board.`
-        : 'Nothing yet — pin a picture to the Board and it lands here too.';
+      list.length ? `${list.length} picture${list.length === 1 ? '' : 's'} saved.`
+        : 'Nothing here yet.';
     renderGrid();
   }
   function closeModal() { document.getElementById('galleryModal').classList.add('hidden'); }
@@ -74,7 +74,7 @@ const Gallery = (() => {
     if (!g) return;
     g.innerHTML = '';
     if (!list.length) {
-      g.innerHTML = `<p class="shelf-empty">Empty. Drop a picture onto any Board tab and it'll show up here for good.</p>`;
+      g.innerHTML = `<p class="shelf-empty">Nothing here yet.</p>`;
       return;
     }
     list.forEach(rec => {

@@ -24,7 +24,6 @@ const Mobile = (() => {
     try {
       if (typeof Web !== 'undefined' && document.getElementById('view-web')?.classList.contains('on')) Web.draw();
       if (typeof Cal !== 'undefined' && document.getElementById('view-calendar')?.classList.contains('on')) Cal.grid();
-      if (typeof Board !== 'undefined') Board.refresh();
       if (typeof Stacks !== 'undefined') Stacks.refresh();
     } catch (e) { }
   }

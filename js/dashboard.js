@@ -243,7 +243,7 @@ const Dashboard = (() => {
     const host = document.getElementById('dashStacks');
     if (!host) return;
     const stacks = Store.get('stk.stacks', []);
-    if (!stacks.length) { host.innerHTML = `<p class="dash-empty">No projects piled up yet — start one on The Stacks.</p>`; return; }
+    if (!stacks.length) { host.innerHTML = `<p class="dash-empty">No projects yet — start one on The Stacks.</p>`; return; }
     host.innerHTML = stacks.slice(0, 5).map(s => {
       const total = (s.books || []).length;
       const done = (s.books || []).filter(b => b.done).length;
@@ -262,7 +262,7 @@ const Dashboard = (() => {
     const strip = document.getElementById('dashGalleryStrip');
     if (!strip) return;
     const recent = Gallery.recent(8);
-    if (!recent.length) { strip.innerHTML = `<p class="dash-empty">Pin a picture to the Board and it'll be kept here for good.</p>`; return; }
+    if (!recent.length) { strip.innerHTML = `<p class="dash-empty">No pictures yet.</p>`; return; }
     strip.innerHTML = '';
     recent.forEach(rec => {
       const cell = el('div', 'dash-gal-cell');

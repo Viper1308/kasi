@@ -855,7 +855,6 @@ h1,h2,h3,h4{margin:0;font-weight:600;letter-spacing:-.01em}
 .stk-side-foot .inp{flex:1;min-width:180px}
 
 /* ═══════════ 6b. THE BOARD — tabs, endless plane ═══════════ */
-#view-vision{overflow:hidden}
 .vb-tabbar{
   position:absolute;top:0;left:0;right:0;height:37px;z-index:75;
   display:flex;align-items:center;gap:6px;padding:0 10px;
