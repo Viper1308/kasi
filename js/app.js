@@ -177,6 +177,8 @@
     if (dc) dc.textContent = hm;
     const tc = document.getElementById('topClock');
     if (tc) tc.textContent = n.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' }).toUpperCase() + '  ' + hm;
+    const hc = document.getElementById('hubClock');
+    if (hc) hc.textContent = hm;
   }
 
   /* ──────── STORAGE GAUGE ──────── */

@@ -276,21 +276,15 @@ const Dashboard = (() => {
   function renderRadar() {
     const svg = document.getElementById('dashRadar');
     if (!svg) return;
-    const books = Store.get('books', []).length;
-    const thoughts = Store.get('thoughts', []).length;
-    const stacks = Store.get('stk.stacks', []).length;
-    const web = Object.keys(Store.get('web.custom', {})).length + 78;
-    const gal = Gallery.count();
-    const tasksDone = Cal.dashTasks().filter(t => t.done).length;
+    if (typeof Docket === 'undefined' || !Docket.sectionProgress) return;
     const axes = [
-      { l: 'Reading', v: books },
-      { l: 'Thoughts', v: thoughts },
-      { l: 'Projects', v: stacks },
-      { l: 'Knowledge', v: web },
-      { l: 'Pictures', v: gal },
-      { l: 'Tasks done', v: tasksDone }
+      { l: 'ENG', v: Docket.sectionProgress('clat', 'english').pct },
+      { l: 'QA', v: Docket.sectionProgress('clat', 'quant').pct },
+      { l: 'LR', v: Docket.sectionProgress('clat', 'logical').pct },
+      { l: 'LGL', v: Docket.sectionProgress('clat', 'legal').pct },
+      { l: 'GK', v: Docket.sectionProgress('clat', 'gk').pct }
     ];
-    const max = Math.max(4, ...axes.map(a => a.v));
+    const max = 100;
     const cx = 110, cy = 96, R = 72, n = axes.length;
     const pt = (i, frac) => {
       const a = -Math.PI / 2 + (i / n) * Math.PI * 2;

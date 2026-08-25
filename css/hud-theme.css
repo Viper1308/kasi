@@ -1,0 +1,350 @@
+/* ============================================================
+   KASI — HUD COMMAND DECK
+   Loaded after style.css. Re-skins colour, texture, chrome and
+   panel treatment app-wide (desk dashboard + every sideboard)
+   without touching the structural/layout rules above it.
+   ============================================================ */
+
+:root{
+  --r:3px;
+  --hud-grid: rgba(63,224,255,.05);
+  --hud-grid-2: rgba(91,140,255,.035);
+  --hud-glow: rgba(63,224,255,.35);
+  --hud-glow-soft: rgba(63,224,255,.16);
+}
+
+/* ---------- global type / texture ---------- */
+body{
+  background:var(--room);
+}
+::-webkit-scrollbar-thumb{background:var(--line)}
+::-webkit-scrollbar-thumb:hover{background:var(--amber)}
+:focus-visible{outline:1px solid var(--amber);outline-offset:1px}
+
+@keyframes hudScan{0%{background-position:0 0}100%{background-position:0 480px}}
+@keyframes hudPulse{0%,100%{opacity:.55}50%{opacity:1}}
+
+.desk-scene,
+.full-view{
+  background:
+    repeating-linear-gradient(180deg, var(--hud-grid) 0 1px, transparent 1px 34px),
+    repeating-linear-gradient(90deg, var(--hud-grid-2) 0 1px, transparent 1px 34px),
+    radial-gradient(ellipse 70% 45% at 50% -6%, var(--hud-glow-soft), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(91,140,255,.06), transparent 60%),
+    var(--room) !important;
+}
+.desk-scene::after,
+.full-view::after{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:repeating-linear-gradient(180deg, rgba(255,255,255,.012) 0 1px, transparent 1px 3px);
+  mix-blend-mode:overlay;
+}
+
+/* ---------- headings / labels everywhere, HUD readout style ---------- */
+.dash-card h4,.settings-block h4,.gallery-head h2,.record h4,
+.stats-bar .label,.eyebrow,.brand,.strip-block h4{
+  font-family:var(--mono) !important;
+  letter-spacing:.16em !important;
+  text-transform:uppercase !important;
+  color:var(--amber) !important;
+  text-shadow:0 0 10px var(--hud-glow-soft);
+}
+.dash-card h4{
+  border-bottom:1px solid var(--line);
+  padding-bottom:8px;
+}
+
+/* ---------- corner-bracket HUD panels ---------- */
+.dash-card,.settings-card,.login-card,.record,.strip-block,.board-tools,
+.stk-side,.web-panel,.gallery-card,.cal-core,
+.theme-swatch{
+  position:relative;
+  background:linear-gradient(180deg, var(--panel), var(--screen-bg)) !important;
+  border:1px solid var(--line) !important;
+  border-radius:2px !important;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+}
+.dash-card{
+  background:
+    linear-gradient(120deg, transparent 46%, rgba(63,224,255,.05) 50%, transparent 54%),
+    linear-gradient(180deg, var(--panel), var(--screen-bg)) !important;
+  background-size:260% 260%, 100% 100%;
+  animation:hologramSweep 9s ease-in-out infinite;
+}
+@keyframes hologramSweep{
+  0%{background-position:180% 180%, 0 0}
+  50%{background-position:-40% -40%, 0 0}
+  100%{background-position:180% 180%, 0 0}
+}
+.dash-card::before,.settings-card::before,.login-card::before,.record::before,
+.strip-block::before,.board-tools::before,.stk-side::before,.web-panel::before,
+.gallery-card::before,.cal-core::before{
+  content:'';position:absolute;top:0;left:0;width:9px;height:9px;pointer-events:none;
+  border-top:2px solid var(--amber);border-left:2px solid var(--amber);opacity:.75;
+}
+.dash-card::after,.settings-card::after,.login-card::after,.record::after,
+.strip-block::after,.board-tools::after,.stk-side::after,.web-panel::after,
+.gallery-card::after,.cal-core::after{
+  content:'';position:absolute;bottom:0;right:0;width:9px;height:9px;pointer-events:none;
+  border-bottom:2px solid var(--cyan);border-right:2px solid var(--cyan);opacity:.75;
+}
+
+/* ---------- TOP DOCK — brand + links to every sideboard, inspo-style icon row ---------- */
+.top-dock{
+  flex:none;display:flex;align-items:center;gap:10px;
+  padding:7px 14px;
+  background:linear-gradient(180deg, var(--panel), var(--screen-bg));
+  border-bottom:1px solid var(--line);
+  box-shadow:0 1px 0 var(--hud-glow-soft);
+  position:relative;z-index:7;
+}
+.dock-mark{
+  flex:none;width:28px;height:28px;display:grid;place-items:center;
+  border:1px solid var(--amber);border-radius:2px;color:var(--amber);
+  font-family:var(--mono);font-weight:700;font-size:13px;
+  box-shadow:0 0 10px var(--hud-glow-soft);position:relative;
+}
+.dock-mark::after{
+  content:'';position:absolute;inset:-4px;border:1px solid var(--amber);border-radius:2px;
+  opacity:.25;animation:hudPulse 2.6s ease-in-out infinite;pointer-events:none;
+}
+.dock-icons{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.dock-tile{
+  flex:none;width:34px;height:34px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:0;padding:0;border:1px solid var(--line);border-radius:2px;
+  background:var(--screen-bg);cursor:pointer;transition:.15s;position:relative;
+}
+.dock-tile .qn-ic{width:16px;height:16px;color:var(--dim);fill:var(--dim);opacity:.85;transition:.15s}
+.dock-tile svg{width:16px;height:16px;color:var(--dim)}
+.dock-tile span{display:none}
+.dock-tile:hover{
+  border-color:var(--amber);background:rgba(63,224,255,.08);
+  box-shadow:0 0 10px var(--hud-glow-soft);
+}
+.dock-tile:hover .qn-ic{color:var(--amber);fill:var(--amber);opacity:1}
+.dock-tile:hover svg{color:var(--amber)}
+.dock-badge{
+  position:absolute;bottom:-5px;right:-5px;background:var(--amber);color:#04070a;
+  font-family:var(--mono);font-size:8px;font-weight:700;line-height:1;
+  padding:2px 3px;border-radius:6px;min-width:12px;text-align:center;
+}
+.dock-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.dock-right .settings-gear,.dock-right .desk-clock-pill{position:static !important}
+.desk-clock-pill{
+  font-family:var(--mono) !important;background:var(--panel) !important;border:1px solid var(--line) !important;
+  color:var(--amber) !important;letter-spacing:.1em;border-radius:2px !important;
+  box-shadow:0 0 10px var(--hud-glow-soft) inset;
+}
+.settings-gear{border-radius:2px !important;background:var(--panel) !important;border:1px solid var(--line) !important}
+.settings-gear:hover{border-color:var(--amber) !important;box-shadow:0 0 10px var(--hud-glow-soft)}
+
+/* ---------- dashboard widget grid, tighter + denser ---------- */
+.dash-grid{gap:10px !important}
+.dash-card{padding:14px 15px 16px !important}
+.dash-count{color:var(--cyan) !important}
+
+/* ---------- gauges / graphs: neon glow ---------- */
+#dashRadar,#dashPie,#dashBars,#webSvg{
+  filter:drop-shadow(0 0 5px var(--hud-glow-soft));
+}
+.seal-fill{filter:drop-shadow(0 0 6px var(--hud-glow-soft))}
+.seal-track{stroke:var(--line) !important}
+
+/* ---------- full-view chrome → HUD dock strip (applies to every sideboard) ---------- */
+.full-top-bar{
+  background:linear-gradient(180deg,var(--panel),var(--screen-bg)) !important;
+  border-bottom:1px solid var(--line) !important;
+  box-shadow:0 1px 0 var(--hud-glow-soft);
+}
+.back-btn{
+  border:1px solid var(--line) !important;border-radius:2px !important;color:var(--dim) !important;
+}
+.back-btn:hover{border-color:var(--amber) !important;background:rgba(63,224,255,.08) !important;color:var(--ink) !important}
+.tab-row{
+  gap:4px !important;padding:3px;border:1px solid var(--line);border-radius:2px;background:var(--screen-bg);
+}
+.tab{
+  border-radius:2px !important;color:var(--faint) !important;letter-spacing:.08em !important;
+  display:flex;align-items:center;gap:6px;
+}
+.tab svg{width:13px;height:13px;flex:none;opacity:.7;fill:currentColor}
+.tab:hover{background:rgba(63,224,255,.07) !important;color:var(--ink) !important}
+.tab.active{
+  color:var(--amber) !important;background:rgba(63,224,255,.12) !important;
+  box-shadow:inset 0 -2px 0 var(--amber);
+}
+.tab.active svg{opacity:1}
+.top-clock{color:var(--cyan) !important;letter-spacing:.14em !important}
+.storage-gauge{color:var(--faint) !important}
+.top-action:hover{filter:drop-shadow(0 0 4px var(--hud-glow-soft))}
+
+/* ---------- buttons / inputs / misc controls, sharpened ---------- */
+.btn,.tool,.pomo-tab,.nav-btn,.icn,.file-btn,.link-btn,.tab-btn,.subtab-btn{
+  border-radius:2px !important;
+}
+.btn{background:var(--panel-2) !important;border:1px solid var(--line) !important}
+.btn:not(.ghost):not(.danger){
+  background:linear-gradient(180deg, rgba(63,224,255,.16), rgba(63,224,255,.06)) !important;
+  border-color:var(--amber) !important;color:var(--ink) !important;
+  box-shadow:0 0 10px var(--hud-glow-soft);
+}
+.inp{border-radius:2px !important;background:var(--screen-bg) !important;border:1px solid var(--line) !important}
+.inp:focus{border-color:var(--amber) !important;box-shadow:0 0 0 1px var(--amber)}
+.theme-swatch.on{box-shadow:0 0 0 1px var(--amber),0 0 12px var(--hud-glow-soft) !important}
+
+/* login */
+.login-mark{background:transparent !important;border:1px solid var(--amber);color:var(--amber) !important;box-shadow:0 0 16px var(--hud-glow-soft)}
+.login-logo{color:var(--amber) !important;text-shadow:0 0 12px var(--hud-glow-soft)}
+.login-btn{
+  background:linear-gradient(180deg, rgba(63,224,255,.22), rgba(63,224,255,.08)) !important;
+  border:1px solid var(--amber);color:var(--ink) !important;box-shadow:0 0 14px var(--hud-glow-soft);
+}
+.sync-dot.ok{background:var(--amber) !important;box-shadow:0 0 6px var(--amber) !important}
+
+/* thin animated status flourish on the login mark */
+.login-mark::after{
+  content:'';position:absolute;inset:-4px;border:1px solid var(--amber);border-radius:2px;
+  opacity:.25;animation:hudPulse 2.6s ease-in-out infinite;pointer-events:none;
+}
+.login-mark{position:relative}
+
+/* ---------- mobile: keep dock readable, drop some texture cost ---------- */
+@media (max-width:900px){
+  .desk-scene::after,.full-view::after{display:none}
+}
+
+/* ============================================================
+   HOLOGRAPHIC DASHBOARD LAYOUT — central hub + orbiting widgets
+   Only kicks in on wide screens; narrower widths keep the plain
+   stacked layout already defined in style.css's own breakpoints.
+   ============================================================ */
+@media (min-width:1150px){
+  .dash-grid{
+    grid-template-columns:repeat(6,1fr) !important;
+    grid-auto-rows:minmax(96px,auto) !important;
+    grid-template-areas:
+      "exam     exam     exam exam exam     exam"
+      "todo     subjects hub  hub  pomo     pomo"
+      "todo     subjects hub  hub  pomo     pomo"
+      "upcoming reading  hub  hub  thoughts stacks"
+      "bars     bars     stats stats gallery  gallery" !important;
+    gap:12px !important;
+  }
+  .dash-examprog{grid-area:exam}
+  .dash-todo{grid-area:todo}
+  .dash-subjects{grid-area:subjects}
+  .dash-hub{grid-area:hub}
+  .dash-pomo{grid-area:pomo}
+  .dash-upcoming{grid-area:upcoming}
+  .dash-reading{grid-area:reading}
+  .dash-thoughts{grid-area:thoughts}
+  .dash-stacks{grid-area:stacks}
+  .dash-bars{grid-area:bars}
+  .dash-stats{grid-area:stats}
+  .dash-gallery-box{grid-area:gallery}
+}
+
+/* ============================================================
+   THE CORE — central JARVIS-style reactor (clock + greeting)
+   ============================================================ */
+.dash-hub{
+  display:flex !important;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+  aspect-ratio:1;max-width:420px;margin:0 auto;border-radius:50% !important;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(63,224,255,.14), transparent 70%),
+    linear-gradient(180deg, var(--panel), var(--screen-bg)) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,.4),
+    inset 0 0 40px rgba(63,224,255,.08),
+    0 0 40px rgba(63,224,255,.10) !important;
+}
+.dash-hub::before,.dash-hub::after{display:none !important}
+.hub-ring{
+  position:absolute;top:50%;left:50%;border:1px solid var(--amber);border-radius:50%;
+  transform:translate(-50%,-50%);pointer-events:none;opacity:.28;
+}
+.hub-ring-1{width:38%;padding-bottom:38%;height:0}
+.hub-ring-2{width:56%;padding-bottom:56%;height:0;border-color:var(--cyan);opacity:.22}
+.hub-ring-3{
+  width:74%;padding-bottom:74%;height:0;border-style:dashed;opacity:.16;
+  animation:hubSpin 60s linear infinite;
+}
+.hub-ring-4{
+  width:92%;padding-bottom:92%;height:0;border-color:var(--cyan);opacity:.12;
+  border-style:dotted;animation:hubSpinRev 90s linear infinite;
+}
+.hub-ticks{
+  position:absolute;top:50%;left:50%;width:65%;padding-bottom:65%;height:0;
+  transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;opacity:.22;
+  background:repeating-conic-gradient(var(--amber) 0deg 1.1deg, transparent 1.1deg 9deg);
+  -webkit-mask:radial-gradient(circle, transparent 47%, #000 48%, #000 50%, transparent 51%);
+  mask:radial-gradient(circle, transparent 47%, #000 48%, #000 50%, transparent 51%);
+  animation:hubSpin 100s linear infinite;
+}
+.hub-ticks-rev{
+  width:83%;padding-bottom:83%;opacity:.14;
+  background:repeating-conic-gradient(var(--cyan) 0deg .8deg, transparent .8deg 6deg);
+  animation:hubSpinRev 70s linear infinite;
+}
+.hub-orbit{
+  position:absolute;top:50%;left:50%;width:56%;height:56%;
+  transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;
+  animation:hubSpin 14s linear infinite;
+}
+.hub-orbit-rev{width:74%;height:74%;animation:hubSpinRev 22s linear infinite}
+.hub-blip{
+  position:absolute;top:-2px;left:50%;width:5px;height:5px;margin-left:-2.5px;
+  border-radius:50%;background:var(--amber);box-shadow:0 0 8px var(--amber);
+}
+.hub-orbit-rev .hub-blip{background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+@keyframes hubSpin{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes hubSpinRev{from{transform:translate(-50%,-50%) rotate(360deg)}to{transform:translate(-50%,-50%) rotate(0deg)}}
+.hub-orbit{transform:translate(-50%,-50%) rotate(0deg)}
+.hub-orbit-rev{transform:translate(-50%,-50%) rotate(0deg)}
+
+.hub-core{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
+.hub-greet{
+  font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--cyan);opacity:.85;
+}
+.hub-clock{
+  font-family:var(--mono);font-weight:700;font-size:clamp(30px,4vw,42px);color:var(--ink);
+  text-shadow:0 0 18px var(--hud-glow),0 0 40px var(--hud-glow-soft);letter-spacing:.02em;
+}
+.hub-date{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--amber);opacity:.9;
+}
+
+/* ============================================================
+   SUBJECT BALANCE — circular holographic radar widget
+   ============================================================ */
+.dash-subjects{
+  display:flex !important;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;text-align:center;
+  aspect-ratio:1;max-width:340px;margin:0 auto;border-radius:50% !important;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(63,224,255,.10), transparent 70%),
+    linear-gradient(180deg, var(--panel), var(--screen-bg)) !important;
+  padding:20px !important;
+}
+.dash-subjects::before,.dash-subjects::after{display:none !important}
+.dash-subjects h4{
+  position:absolute;top:22%;left:50%;transform:translateX(-50%);
+  margin:0;border:0 !important;padding:0 !important;white-space:nowrap;
+  display:flex;flex-direction:column;gap:2px;align-items:center;
+}
+.dash-subjects .dash-count{font-size:8.5px}
+.dash-subjects .dash-radar-svg{position:relative;z-index:2;max-width:72%;margin-top:14%}
+
+@media (max-width:900px){
+  .dash-card{grid-area:auto !important}
+  .dash-hub,.dash-subjects{max-width:280px}
+}
+@media (max-width:760px){
+  .dash-wrap{padding-top:12px !important}
+  .top-dock{flex-wrap:wrap;padding:8px 10px}
+  .dock-icons{gap:4px}
+}
+

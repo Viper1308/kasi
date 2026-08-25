@@ -2,6 +2,17 @@
 const Themes = (() => {
   // Each theme overrides a handful of root vars. Kept small on purpose.
   const THEMES = {
+    hud: {
+      name: 'HUD Neon', mood: 'near-black, cyan/blue command-deck',
+      vars: {
+        '--room': '#05080c', '--wall': '#070b10', '--screen': '#070b10', '--screen-bg': '#04070a',
+        '--panel': '#0a1119', '--panel-2': '#0e1721', '--line': '#1c3446',
+        '--ink': '#dff4ff', '--dim': '#7fa8bc', '--faint': '#3f5c6c',
+        '--amber': '#3fe0ff', '--cyan': '#5b8cff', '--rose': '#ff5f7a', '--violet': '#7fd6e0',
+        '--desk-top': '#1c3446', '--desk': '#0e1721', '--desk-dark': '#070b10'
+      },
+      accent2: '#5b8cff'
+    },
     midnight: {
       name: 'Slate Mint', mood: 'near-black, cool mint accent',
       vars: {
@@ -147,11 +158,11 @@ const Themes = (() => {
   }
   const getCustomBase = () => Store.get('ui.customBase', null);
 
-  let currentKey = Store.get('ui.theme', 'midnight');
+  let currentKey = Store.get('ui.theme', 'hud');
 
   function apply(key) {
     if (key === 'custom') THEMES.custom = buildCustom(Store.get('ui.customBase', null) || DEFAULT_CUSTOM_BASE);
-    const t = THEMES[key] || THEMES.midnight;
+    const t = THEMES[key] || THEMES.hud;
     currentKey = key;
     const root = document.documentElement;
     Object.entries(t.vars).forEach(([k, v]) => root.style.setProperty(k, v));

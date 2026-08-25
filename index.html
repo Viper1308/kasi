@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/hud-theme.css">
 </head>
 <body>
 
@@ -36,73 +37,60 @@
   <!-- ── THE DESK (home) ── -->
   <div id="deskView" class="desk-scene">
 
-    <!-- settings gear -->
-    <button class="settings-gear" id="settingsGear" title="Settings">
-      <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 8a4 4 0 100 8 4 4 0 000-8zM12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
-    </button>
-    <div class="desk-clock-pill" id="deskClock">19:45</div>
+    <!-- ═══════════ TOP DOCK — brand + links to every sideboard, HUD icon row ═══════════ -->
+    <div class="top-dock" id="topDock">
+      <div class="dock-mark">K</div>
+      <div class="dock-icons" id="dashNav">
+        <button class="quick-nav dock-tile" data-view="profile" title="The Record">
+          <svg class="qn-ic" viewBox="0 0 40 40"><circle cx="20" cy="14" r="7"/><path d="M8 36c0-8 5-13 12-13s12 5 12 13"/></svg>
+          <span>The Record</span>
+        </button>
+        <button class="quick-nav dock-tile" data-view="web" title="The Web">
+          <svg class="qn-ic" viewBox="0 0 40 40"><circle cx="20" cy="20" r="12" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="20" x2="32" y2="20" stroke="currentColor" stroke-width="1"/><line x1="20" y1="8" x2="20" y2="32" stroke="currentColor" stroke-width="1"/><line x1="11" y1="11" x2="29" y2="29" stroke="currentColor" stroke-width="1"/></svg>
+          <span>The Web</span>
+        </button>
+        <button class="quick-nav dock-tile" data-view="books" title="The Shelf">
+          <svg class="qn-ic" viewBox="0 0 40 40"><rect x="8" y="8" width="5" height="24" rx="1"/><rect x="15" y="12" width="4" height="20" rx="1"/><rect x="21" y="6" width="5" height="26" rx="1"/><rect x="28" y="10" width="4" height="22" rx="1"/></svg>
+          <span>The Shelf</span>
+        </button>
+        <button class="quick-nav dock-tile" data-view="stacks" title="The Stacks">
+          <svg class="qn-ic" viewBox="0 0 40 40"><rect x="7" y="25" width="26" height="6" rx="1.5"/><rect x="9" y="18" width="22" height="6" rx="1.5"/><rect x="11" y="11" width="18" height="6" rx="1.5"/><rect x="13" y="5" width="14" height="5" rx="1.5"/></svg>
+          <span>The Stacks</span>
+        </button>
+        <button class="quick-nav dock-tile" data-view="calendar" title="The Calendar">
+          <svg class="qn-ic" viewBox="0 0 40 40"><rect x="8" y="10" width="24" height="22" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="16" x2="32" y2="16" stroke="currentColor" stroke-width="1.5"/><line x1="15" y1="8" x2="15" y2="12" stroke="currentColor" stroke-width="1.5"/><line x1="25" y1="8" x2="25" y2="12" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span>The Calendar</span>
+        </button>
+        <button class="quick-nav dock-tile" data-view="thoughts" title="The Margin">
+          <svg class="qn-ic" viewBox="0 0 40 40"><line x1="10" y1="12" x2="30" y2="12" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="18" x2="26" y2="18" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="24" x2="22" y2="24" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="30" x2="18" y2="30" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span>The Margin</span>
+        </button>
+        <button class="quick-nav dock-tile" data-view="vision" title="The Board">
+          <svg class="qn-ic" viewBox="0 0 40 40"><rect x="7" y="8" width="14" height="10" rx="1.5"/><rect x="23" y="8" width="10" height="15" rx="1.5"/><rect x="7" y="20" width="10" height="12" rx="1.5"/><rect x="19" y="25" width="14" height="7" rx="1.5"/></svg>
+          <span>The Board</span>
+        </button>
+        <button class="quick-nav dock-tile" data-view="docket" title="The Docket">
+          <svg class="qn-ic" viewBox="0 0 40 40"><rect x="9" y="5" width="22" height="30" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M15 13h10M15 19h10M15 25h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M22 22l2 2 4-4" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>The Docket</span>
+        </button>
+        <button class="dock-tile" id="dashGalleryBtn" title="Gallery">
+          <svg viewBox="0 0 24 24" width="16" height="16"><rect x="3" y="4" width="18" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="8.5" cy="10" r="1.6" fill="currentColor"/><path d="M4 16l5-4.5 3.5 3L16 10l4 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Gallery</span><b class="dock-badge" id="dashGalleryCount">0</b>
+        </button>
+      </div>
+      <div class="dock-right">
+        <div class="desk-clock-pill" id="deskClock">19:45</div>
+        <button class="settings-gear" id="settingsGear" title="Settings">
+          <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 8a4 4 0 100 8 4 4 0 000-8zM12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
 
     <!-- ═══════════ LIFE PLANNER DASHBOARD (replaces the monitor rig) ═══════════ -->
     <div class="dash-wrap" id="dashWrap">
 
-      <!-- ── sidebar ── -->
-      <aside class="dash-side">
-        <div class="dash-side-brand">
-          <div class="dash-side-mark">K</div>
-          <div><b>KASI</b><span>Self-improvement OS</span></div>
-        </div>
-
-        <nav class="dash-nav" id="dashNav">
-          <button class="quick-nav" data-view="profile">
-            <svg class="qn-ic" viewBox="0 0 40 40"><circle cx="20" cy="14" r="7"/><path d="M8 36c0-8 5-13 12-13s12 5 12 13"/></svg>
-            <span>The Record</span>
-          </button>
-          <button class="quick-nav" data-view="web">
-            <svg class="qn-ic" viewBox="0 0 40 40"><circle cx="20" cy="20" r="12" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="20" x2="32" y2="20" stroke="currentColor" stroke-width="1"/><line x1="20" y1="8" x2="20" y2="32" stroke="currentColor" stroke-width="1"/><line x1="11" y1="11" x2="29" y2="29" stroke="currentColor" stroke-width="1"/></svg>
-            <span>The Web</span>
-          </button>
-          <button class="quick-nav" data-view="books">
-            <svg class="qn-ic" viewBox="0 0 40 40"><rect x="8" y="8" width="5" height="24" rx="1"/><rect x="15" y="12" width="4" height="20" rx="1"/><rect x="21" y="6" width="5" height="26" rx="1"/><rect x="28" y="10" width="4" height="22" rx="1"/></svg>
-            <span>The Shelf</span>
-          </button>
-          <button class="quick-nav" data-view="stacks">
-            <svg class="qn-ic" viewBox="0 0 40 40"><rect x="7" y="25" width="26" height="6" rx="1.5"/><rect x="9" y="18" width="22" height="6" rx="1.5"/><rect x="11" y="11" width="18" height="6" rx="1.5"/><rect x="13" y="5" width="14" height="5" rx="1.5"/></svg>
-            <span>The Stacks</span>
-          </button>
-          <button class="quick-nav" data-view="calendar">
-            <svg class="qn-ic" viewBox="0 0 40 40"><rect x="8" y="10" width="24" height="22" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="16" x2="32" y2="16" stroke="currentColor" stroke-width="1.5"/><line x1="15" y1="8" x2="15" y2="12" stroke="currentColor" stroke-width="1.5"/><line x1="25" y1="8" x2="25" y2="12" stroke="currentColor" stroke-width="1.5"/></svg>
-            <span>The Calendar</span>
-          </button>
-          <button class="quick-nav" data-view="thoughts">
-            <svg class="qn-ic" viewBox="0 0 40 40"><line x1="10" y1="12" x2="30" y2="12" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="18" x2="26" y2="18" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="24" x2="22" y2="24" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="30" x2="18" y2="30" stroke="currentColor" stroke-width="1.5"/></svg>
-            <span>The Margin</span>
-          </button>
-          <button class="quick-nav" data-view="vision">
-            <svg class="qn-ic" viewBox="0 0 40 40"><rect x="7" y="8" width="14" height="10" rx="1.5"/><rect x="23" y="8" width="10" height="15" rx="1.5"/><rect x="7" y="20" width="10" height="12" rx="1.5"/><rect x="19" y="25" width="14" height="7" rx="1.5"/></svg>
-            <span>The Board</span>
-          </button>
-          <button class="quick-nav" data-view="docket">
-            <svg class="qn-ic" viewBox="0 0 40 40"><rect x="9" y="5" width="22" height="30" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M15 13h10M15 19h10M15 25h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M22 22l2 2 4-4" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span>The Docket</span>
-          </button>
-        </nav>
-
-        <button class="dash-gallery-btn" id="dashGalleryBtn" title="Open the gallery">
-          <svg viewBox="0 0 24 24" width="15" height="15"><rect x="3" y="4" width="18" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="8.5" cy="10" r="1.6" fill="currentColor"/><path d="M4 16l5-4.5 3.5 3L16 10l4 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span>Gallery</span><b id="dashGalleryCount">0</b>
-        </button>
-
-      </aside>
-
       <!-- ── main column ── -->
       <div class="dash-main">
-
-        <div class="dash-head">
-          <div class="dash-greet">
-            <div class="dash-hello" id="dashHello">Hello</div>
-            <div class="dash-date" id="dashDate">—</div>
-          </div>
-        </div>
 
         <!-- widgets -->
         <div class="dash-grid" id="dashGrid">
@@ -120,8 +108,26 @@
             </div>
           </div>
 
-          <div class="dash-card dash-radar">
-            <h4>Life balance</h4>
+          <!-- ═══ THE CORE — central JARVIS-style reactor display ═══ -->
+          <div class="dash-card dash-hub">
+            <div class="hub-ring hub-ring-1"></div>
+            <div class="hub-ring hub-ring-2"></div>
+            <div class="hub-ring hub-ring-3"></div>
+            <div class="hub-ring hub-ring-4"></div>
+            <div class="hub-ticks"></div>
+            <div class="hub-ticks hub-ticks-rev"></div>
+            <div class="hub-orbit"><i class="hub-blip"></i></div>
+            <div class="hub-orbit hub-orbit-rev"><i class="hub-blip"></i></div>
+            <div class="hub-core">
+              <div class="hub-greet" id="dashHello">Hello</div>
+              <div class="hub-clock" id="hubClock">--:--</div>
+              <div class="hub-date" id="dashDate">—</div>
+            </div>
+          </div>
+
+          <!-- ═══ SUBJECT BALANCE — CLAT radar, moved off the core ═══ -->
+          <div class="dash-card dash-subjects">
+            <h4>Subject Balance <span class="dash-count">CLAT 2027</span></h4>
             <svg id="dashRadar" viewBox="0 0 220 200" class="dash-radar-svg"></svg>
           </div>
 
@@ -229,14 +235,14 @@
         <span>Desk</span>
       </button>
       <div class="tab-row" id="tabRow">
-        <button class="tab" data-view="profile">The Record</button>
-        <button class="tab" data-view="web">The Web</button>
-        <button class="tab" data-view="books">The Shelf</button>
-        <button class="tab" data-view="stacks">The Stacks</button>
-        <button class="tab" data-view="calendar">Calendar</button>
-        <button class="tab" data-view="thoughts">Margin</button>
-        <button class="tab" data-view="vision">Board</button>
-        <button class="tab" data-view="docket">Docket</button>
+        <button class="tab" data-view="profile"><svg viewBox="0 0 40 40"><circle cx="20" cy="14" r="7"/><path d="M8 36c0-8 5-13 12-13s12 5 12 13"/></svg><span>The Record</span></button>
+        <button class="tab" data-view="web"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="12" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="20" x2="32" y2="20" stroke="currentColor" stroke-width="1"/><line x1="20" y1="8" x2="20" y2="32" stroke="currentColor" stroke-width="1"/></svg><span>The Web</span></button>
+        <button class="tab" data-view="books"><svg viewBox="0 0 40 40"><rect x="8" y="8" width="5" height="24" rx="1"/><rect x="15" y="12" width="4" height="20" rx="1"/><rect x="21" y="6" width="5" height="26" rx="1"/><rect x="28" y="10" width="4" height="22" rx="1"/></svg><span>The Shelf</span></button>
+        <button class="tab" data-view="stacks"><svg viewBox="0 0 40 40"><rect x="7" y="25" width="26" height="6" rx="1.5"/><rect x="9" y="18" width="22" height="6" rx="1.5"/><rect x="11" y="11" width="18" height="6" rx="1.5"/></svg><span>The Stacks</span></button>
+        <button class="tab" data-view="calendar"><svg viewBox="0 0 40 40"><rect x="8" y="10" width="24" height="22" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="16" x2="32" y2="16" stroke="currentColor" stroke-width="1.5"/></svg><span>Calendar</span></button>
+        <button class="tab" data-view="thoughts"><svg viewBox="0 0 40 40"><line x1="10" y1="12" x2="30" y2="12" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="18" x2="26" y2="18" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="24" x2="22" y2="24" stroke="currentColor" stroke-width="1.5"/></svg><span>Margin</span></button>
+        <button class="tab" data-view="vision"><svg viewBox="0 0 40 40"><rect x="7" y="8" width="14" height="10" rx="1.5"/><rect x="23" y="8" width="10" height="15" rx="1.5"/><rect x="7" y="20" width="10" height="12" rx="1.5"/></svg><span>Board</span></button>
+        <button class="tab" data-view="docket"><svg viewBox="0 0 40 40"><rect x="9" y="5" width="22" height="30" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M15 13h10M15 19h10M15 25h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span>Docket</span></button>
       </div>
       <div class="top-right">
         <span class="sync-dot" id="syncDot" title="Sync status" hidden></span>
