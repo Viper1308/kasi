@@ -272,7 +272,7 @@ const Dashboard = (() => {
     });
   }
 
-  /* ---------------- life-balance radar ---------------- */
+  /* ---------------- subject-balance radar ---------------- */
   function renderRadar() {
     const svg = document.getElementById('dashRadar');
     if (!svg) return;
@@ -337,6 +337,15 @@ const Dashboard = (() => {
     const btn = document.getElementById('pomoStart');
     if (btn) btn.textContent = st.running ? 'Pause' : (remaining === POMO_DURATIONS[st.mode] ? 'Start' : 'Resume');
     document.querySelectorAll('.pomo-tab').forEach(b => b.classList.toggle('on', b.dataset.mode === st.mode));
+
+    const ring = document.getElementById('pomoArc');
+    if (ring) {
+      const total = POMO_DURATIONS[st.mode] || 1;
+      const frac = Math.max(0, Math.min(1, remaining / total));
+      const C = 326.7; // 2 * PI * 52 (arc radius)
+      ring.style.strokeDasharray = String(C);
+      ring.style.strokeDashoffset = String(C * (1 - frac));
+    }
 
     if (st.running && remaining <= 0 && st.completedAt !== pomoLastCompletedAt) {
       pomoLastCompletedAt = st.completedAt || Date.now();

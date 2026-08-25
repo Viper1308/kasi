@@ -256,7 +256,7 @@ const Web = (() => {
   function nodePanel(n) {
     if (n.kind === 'topic') {
       const p = shell(esc(n.label), 'Topic of ' + esc(label(n.parent)));
-      sec(p, 'What this is', `<div class="wp-brief">Drag a strand from here to anything else on the board. Hold Shift and drag, or switch on “Draw strand”.</div>`);
+      sec(p, 'What this is', `<div class="wp-brief">Drag a strand from here to anything else on the map. Hold Shift and drag, or switch on “Draw strand”.</div>`);
       const del = el('button', 'btn ghost danger', 'Delete topic');
       del.onclick = () => {
         const s = subj(n.parent); s.topics = s.topics.filter(t => `t:${s.id}:${t.id}` !== n.id);

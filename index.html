@@ -134,7 +134,13 @@
               <button class="pomo-tab" data-mode="short">Short break</button>
               <button class="pomo-tab" data-mode="long">Long break</button>
             </div>
-            <div class="pomo-time" id="pomoTime">25:00</div>
+            <div class="pomo-dial">
+              <svg viewBox="0 0 120 120" class="pomo-dial-svg">
+                <circle cx="60" cy="60" r="52" class="pomo-arc-track"/>
+                <circle cx="60" cy="60" r="52" class="pomo-arc" id="pomoArc"/>
+              </svg>
+              <div class="pomo-time" id="pomoTime">25:00</div>
+            </div>
             <div class="pomo-controls">
               <button class="btn pomo-start" id="pomoStart">Start</button>
               <button class="btn ghost tiny" id="pomoReset" title="Reset">↺</button>
@@ -461,7 +467,6 @@
 <script src="js/store.js"></script>
 <script src="js/sync.js"></script>
 <script src="js/themes.js"></script>
-<script src="js/gestures.js"></script>
 <script src="js/connections.js"></script>
 <script src="js/profile.js"></script>
 <script src="js/web.js"></script>

@@ -1,10 +1,10 @@
 /* ══════════════ THE MARGIN — thoughts and quotes ══════════════
    Each note can carry one picture — pasted straight from the clipboard while
    composing, or attached via the paperclip. Pictures live under their own
-   'mg:' key (separate from the Board's 'vb:' images) so nothing collides,
-   and — same as the Board — every picture attached here is also copied into
-   the Gallery the moment it's added, so it's kept even if the note is
-   later edited or deleted. */
+   'mg:' key so nothing collides with other pictures elsewhere in the app,
+   and every picture attached here is also copied into the Gallery the
+   moment it's added, so it's kept even if the note is later edited or
+   deleted. */
 const Margin = (() => {
   let list = Store.get('thoughts', []);
   let kind = 'thought', q = '';
@@ -67,7 +67,7 @@ const Margin = (() => {
     if (pendingImg) {
       entry.img = uid();
       Store.putImg('mg:' + entry.img, pendingImg);
-      if (typeof Gallery !== 'undefined') Gallery.add(pendingImg, { boardId: null, boardName: 'The Margin', kind: 'margin' });
+      if (typeof Gallery !== 'undefined') Gallery.add(pendingImg, { sourceId: null, sourceName: 'The Margin', kind: 'margin' });
     }
     list.unshift(entry);
     ta.value = ''; document.getElementById('thWho').value = '';

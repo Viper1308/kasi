@@ -55,7 +55,7 @@ body{
 }
 
 /* ---------- corner-bracket HUD panels ---------- */
-.dash-card,.settings-card,.login-card,.record,.strip-block,.board-tools,
+.dash-card,.settings-card,.login-card,.record,.strip-block,
 .stk-side,.web-panel,.gallery-card,.cal-core,
 .theme-swatch{
   position:relative;
@@ -77,16 +77,43 @@ body{
   100%{background-position:180% 180%, 0 0}
 }
 .dash-card::before,.settings-card::before,.login-card::before,.record::before,
-.strip-block::before,.board-tools::before,.stk-side::before,.web-panel::before,
+.strip-block::before,.stk-side::before,.web-panel::before,
 .gallery-card::before,.cal-core::before{
   content:'';position:absolute;top:0;left:0;width:9px;height:9px;pointer-events:none;
   border-top:2px solid var(--amber);border-left:2px solid var(--amber);opacity:.75;
 }
 .dash-card::after,.settings-card::after,.login-card::after,.record::after,
-.strip-block::after,.board-tools::after,.stk-side::after,.web-panel::after,
+.strip-block::after,.stk-side::after,.web-panel::after,
 .gallery-card::after,.cal-core::after{
   content:'';position:absolute;bottom:0;right:0;width:9px;height:9px;pointer-events:none;
   border-bottom:2px solid var(--cyan);border-right:2px solid var(--cyan);opacity:.75;
+}
+
+/* ---------- creative widget shapes: chamfered panels + a hexagon ---------- */
+.dash-card:not(.dash-hub):not(.dash-subjects){
+  clip-path:polygon(18px 0, 100% 0, 100% 100%, 0 100%, 0 18px);
+}
+.dash-card:not(.dash-hub):not(.dash-subjects)::before{display:none}
+
+.dash-card.dash-gallery-box{
+  clip-path:polygon(30px 0, calc(100% - 30px) 0, 100% 50%, calc(100% - 30px) 100%, 30px 100%, 0 50%) !important;
+  padding-left:34px !important;padding-right:34px !important;
+  min-height:132px !important;
+  filter:drop-shadow(0 0 10px rgba(63,224,255,.22)) drop-shadow(0 8px 20px rgba(0,0,0,.5));
+}
+
+/* ---------- Focus Timer: an arc-shaped progress dial, not a plain number ---------- */
+.pomo-dial{position:relative;display:flex;align-items:center;justify-content:center;margin:10px 0}
+.pomo-dial-svg{width:150px;height:150px;transform:rotate(-90deg)}
+.pomo-arc-track{fill:none;stroke:var(--line);stroke-width:4}
+.pomo-arc{
+  fill:none;stroke:var(--amber);stroke-width:4;stroke-linecap:round;
+  filter:drop-shadow(0 0 6px var(--hud-glow-soft));
+  transition:stroke-dashoffset 1s linear;
+}
+.pomo-dial .pomo-time{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  margin:0;font-size:26px;
 }
 
 /* ---------- TOP DOCK — brand + links to every sideboard, inspo-style icon row ---------- */
@@ -221,14 +248,15 @@ body{
 @media (min-width:1150px){
   .dash-grid{
     grid-template-columns:repeat(6,1fr) !important;
-    grid-auto-rows:minmax(96px,auto) !important;
+    grid-auto-rows:minmax(78px,auto) !important;
     grid-template-areas:
-      "exam     exam     exam exam exam     exam"
-      "todo     subjects hub  hub  pomo     pomo"
-      "todo     subjects hub  hub  pomo     pomo"
-      "upcoming reading  hub  hub  thoughts stacks"
-      "bars     bars     stats stats gallery  gallery" !important;
-    gap:12px !important;
+      "exam     exam     exam     exam    exam     exam"
+      "todo     todo     hub      hub     pomo     pomo"
+      "upcoming upcoming hub      hub     thoughts thoughts"
+      "reading  reading  hub      hub     stacks   stacks"
+      "bars     bars     hub      hub     stats    stats"
+      "bars     bars     subjects gallery stats    stats" !important;
+    gap:10px !important;
   }
   .dash-examprog{grid-area:exam}
   .dash-todo{grid-area:todo}
@@ -250,7 +278,7 @@ body{
 .dash-hub{
   display:flex !important;align-items:center;justify-content:center;
   position:relative;overflow:hidden;
-  width:clamp(230px,22vw,320px);height:clamp(230px,22vw,320px);
+  width:clamp(260px,27vw,380px);height:clamp(260px,27vw,380px);
   align-self:center;justify-self:center;margin:0;border-radius:50% !important;
   background:
     radial-gradient(circle at 50% 50%, rgba(63,224,255,.14), transparent 70%),
@@ -310,7 +338,7 @@ body{
   color:var(--cyan);opacity:.85;
 }
 .hub-clock{
-  font-family:var(--mono);font-weight:700;font-size:clamp(30px,4vw,42px);color:var(--ink);
+  font-family:var(--mono);font-weight:700;font-size:clamp(34px,4.6vw,54px);color:var(--ink);
   text-shadow:0 0 18px var(--hud-glow),0 0 40px var(--hud-glow-soft);letter-spacing:.02em;
 }
 .hub-date{

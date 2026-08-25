@@ -41,12 +41,6 @@ const Mobile = (() => {
         () => t.scrollIntoView && t.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' }), 60));
     });
 
-    // stop iOS bouncing the whole page when you drag on a canvas
-    ['board', 'stkRoom'].forEach(id => {
-      const n = document.getElementById(id);
-      if (n) n.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
-    });
-
     // double-tap-to-zoom is a nuisance on a canvas app
     let lastTap = 0;
     document.addEventListener('touchend', e => {
