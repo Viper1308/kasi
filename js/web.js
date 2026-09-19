@@ -84,7 +84,6 @@ const Web = (() => {
   /* ---------- draw ---------- */
   function draw() {
     ensurePos();
-    if (document.getElementById('webSubjList')) renderSubjList();
     svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
     gRoot.setAttribute('transform', `translate(${view.x},${view.y}) scale(${view.k})`);
     gRoot.innerHTML = '';
@@ -290,25 +289,8 @@ const Web = (() => {
     }
   }
 
-  /* ---------- left subject list (NEXUS sidebar) ---------- */
-  function renderSubjList() {
-    const host = document.getElementById('webSubjList');
-    const count = document.getElementById('webSubjCount');
-    if (!host) return;
-    if (count) count.textContent = subjects.length + ' subjects';
-    host.innerHTML = subjects.map(s => `
-      <button class="web-subj-item${sel === s.id ? ' sel' : ''}" data-id="${s.id}">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="${ICONS[s.id] || GENERIC_ICON}"/></svg>
-        <span>${esc(s.label)}</span>
-      </button>`).join('');
-    host.querySelectorAll('.web-subj-item').forEach(b => b.onclick = () => {
-      sel = b.dataset.id; selEdge = null; draw(); renderSubjList(); nodePanel(subj(b.dataset.id));
-    });
-  }
-
   /* ---------- init ---------- */
   function init() {
-    renderSubjList();
     svg = document.getElementById('webSvg');
     gRoot = document.createElementNS(NS, 'g');
     svg.appendChild(gRoot);

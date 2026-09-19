@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Focus timer — NEXUS</title>
+<title>Focus timer — KASI</title>
 <link rel="icon" href="data:,">
 <style>
   :root{
-    --room:#0b0a11; --panel:#150f20; --panel-2:#1c1530; --line:#2a2240;
-    --ink:#f3f1f9; --dim:#a49bc4; --faint:#655a85; --amber:#8b6df0;
+    --room:#0c0c0e; --panel:#151517; --panel-2:#1b1b1f; --line:#26262b;
+    --ink:#eceef0; --dim:#9a9ca3; --faint:#5c5e66; --amber:#7dd3a8;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
@@ -33,7 +33,7 @@
   .controls{display:flex;gap:10px;width:100%;max-width:220px;-webkit-app-region:no-drag}
   button{font-family:inherit;cursor:pointer}
   .start{
-    flex:1;background:var(--amber);color:#100b1c;border:0;border-radius:9px;
+    flex:1;background:var(--amber);color:#0a0a0c;border:0;border-radius:9px;
     padding:11px;font-weight:700;font-size:14px;letter-spacing:.04em;transition:filter .15s;
   }
   .start:hover{filter:brightness(1.08)}
@@ -46,7 +46,7 @@
 </style>
 </head>
 <body>
-  <div class="brand">NEXUS · Focus Timer</div>
+  <div class="brand">KASI · Focus Timer</div>
   <div class="tabs" id="tabs">
     <button class="tab on" data-mode="focus">Focus</button>
     <button class="tab" data-mode="short">Short break</button>
@@ -85,7 +85,7 @@
     startBtn.textContent = st.running ? 'Pause' : (remaining === DURATIONS[st.mode] ? 'Start' : 'Resume');
     modeLabel.textContent = MODE_LABEL[st.mode] || 'Focus block';
     document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.mode === st.mode));
-    document.title = (st.running ? fmt(remaining) + ' · ' : '') + 'Focus timer — NEXUS';
+    document.title = (st.running ? fmt(remaining) + ' · ' : '') + 'Focus timer — KASI';
 
     if (st.running && remaining <= 0 && st.completedAt !== lastCompletedAt) {
       lastCompletedAt = st.completedAt || Date.now();

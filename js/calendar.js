@@ -49,16 +49,9 @@ const Cal = (() => {
       if (it && !it.ro) { it.date = null; save(); renderWs(); grid(); }
     };
   }
-  function tint(hex, a) {
-    if (!hex || hex[0] !== '#') return 'transparent';
-    const n = parseInt(hex.slice(1), 16);
-    return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`;
-  }
   function chip(i, full) {
     const li = el('li', 'ws-item' + (i.kind === 'note' ? ' note' : ''));
-    const c = colorOf(i.cal);
-    li.style.borderLeftColor = c;
-    li.style.background = tint(c, .14);
+    li.style.borderLeftColor = colorOf(i.cal);
     li.draggable = true;
     li.innerHTML = `<div>${esc(i.text)}</div>${full ? `<div class="meta">${i.kind.toUpperCase()} · ${(cals.find(c => c.id === i.cal) || {}).name || ''}</div>` : ''}<button class="x">✕</button>`;
     li.ondragstart = e => e.dataTransfer.setData('text/plain', i.id);
@@ -74,16 +67,14 @@ const Cal = (() => {
 
     if (mode === 'month' || mode === 'week') {
       const dow = el('div', 'dow');
-      ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(d => dow.appendChild(el('span', '', d)));
+      ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].forEach(d => dow.appendChild(el('span', '', d)));
       box.appendChild(dow);
     }
 
     if (mode === 'month') {
       title.textContent = `${MON[cursor.getMonth()]} ${cursor.getFullYear()}`;
       const first = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
-      // JavaScript numbers Sunday as 0, which is exactly the first column
-      // for this calendar.
-      const shift = first.getDay();
+      const shift = (first.getDay() + 6) % 7;
       const g = el('div', 'grid-m');
       for (let n = 0; n < 42; n++) {
         const d = new Date(first); d.setDate(1 - shift + n);
@@ -92,7 +83,7 @@ const Cal = (() => {
       box.appendChild(g);
     }
     else if (mode === 'week') {
-      const s = new Date(cursor); s.setDate(s.getDate() - s.getDay());
+      const s = new Date(cursor); s.setDate(s.getDate() - ((s.getDay() + 6) % 7));
       const e = new Date(s); e.setDate(e.getDate() + 6);
       title.textContent = `${s.getDate()} ${MON[s.getMonth()].slice(0, 3)} – ${e.getDate()} ${MON[e.getMonth()].slice(0, 3)} ${e.getFullYear()}`;
       const g = el('div', 'grid-w');

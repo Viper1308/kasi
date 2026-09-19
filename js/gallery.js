@@ -1,4 +1,4 @@
-/* ══════════════ THE GALLERY — every picture ever saved from elsewhere in NEXUS ══════════════
+/* ══════════════ THE GALLERY — every picture ever saved from elsewhere in KASI ══════════════
    Entries are a separate, append-only record: pictures are copied here under their
    own id ('gal:'+id) so they survive independently of wherever they first came from.
    ================================================================== */

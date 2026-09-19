@@ -1,14 +1,13 @@
-/* ══════════════ THE RIG — login, sidebar routing ══════════════
-   NEXUS-style rework: the old "desk vs fullscreen" split is gone.
-   Every screen (including the Dashboard) is a peer view switched by
-   the persistent left sidebar. All view-level init calls below are
-   unchanged from before — only how a view is shown has changed. */
+/* ══════════════ THE RIG — login, desk scene, view switching ══════════════ */
 (() => {
-  const VIEWS = ['dashboard', 'profile', 'web', 'books', 'stacks', 'calendar', 'thoughts', 'docket'];
+  const VIEWS = ['profile', 'web', 'books', 'stacks', 'calendar', 'thoughts', 'docket'];
   let current = null;
   let inited = false;
 
   /* ──────── LOGIN ──────── */
+  // Two modes:
+  //  • Supabase configured (config.js filled in) → real accounts + cross-device sync
+  //  • Not configured → the old local admin/password gate, offline only
   const CRED_USER = 'admin';
   const CRED_PASS = 'Timmyboi1!';
   let signupMode = false;
@@ -16,14 +15,18 @@
   async function checkLogin() {
     Themes.apply(Themes.current());
 
-    const initRes = await Sync.init();
+    const initRes = await Sync.init();  // loads library + restores session if signed in
 
     if (Sync.enabled && !initRes.error) {
       setupSupabaseLogin();
-      if (Sync.currentUser()) { await enterWithSync(); }
+      if (Sync.currentUser()) {
+        // already signed in on this device → pull data, then in
+        await enterWithSync();
+      }
       return;
     }
 
+    // ---- offline fallback: old local gate ----
     document.getElementById('loginSub').textContent = 'private terminal · offline';
     if (Store.get('auth.ok', false)) { unlock(); return; }
     document.getElementById('loginBtn').onclick = tryLocalLogin;
@@ -36,7 +39,8 @@
     const p = document.getElementById('loginPass').value;
     if (u === CRED_USER && p === CRED_PASS) {
       Store.set('auth.ok', true);
-      unlock();
+      document.getElementById('loginGate').style.animation = 'monitorOn .35s ease reverse both';
+      setTimeout(unlock, 350);
     } else {
       loginErr('Wrong credentials.');
     }
@@ -106,13 +110,18 @@
     if (msg) { document.getElementById('loginPass').value = ''; document.getElementById('loginPass').focus(); }
   }
 
+  // pull cloud data down, turn on mirroring, then start the app
   async function enterWithSync() {
     const sub = document.getElementById('loginSub');
     sub.textContent = 'syncing your data…';
     const firstEntryThisLoad = !window.__pulled;
     try {
-      const res = await Sync.pullAll();
+      const res = await Sync.pullAll();   // cloud → localStorage (suppressed, no echo)
       window.__pulled = true;
+      // If this login just replaced the in-memory module state with fresh cloud
+      // data, the already-loaded modules are holding stale values. A single
+      // reload re-runs every module against the now-current localStorage.
+      // The Supabase session persists, so the reload enters directly.
       if (firstEntryThisLoad && res && res.ok && res.count > 0 && !sessionStorage.getItem('pos_reloaded')) {
         sessionStorage.setItem('pos_reloaded', '1');
         Store.setMirror(true);
@@ -120,8 +129,9 @@
         return;
       }
     } catch (e) { console.warn(e); }
-    Store.setMirror(true);
-    unlock();
+    Store.setMirror(true);        // from now on, every write also goes up
+    document.getElementById('loginGate').style.animation = 'monitorOn .35s ease reverse both';
+    setTimeout(unlock, 350);
   }
 
   function unlock() {
@@ -130,44 +140,32 @@
     if (!inited) initApp();
   }
 
-  /* ──────── VIEW ROUTING ──────── */
-  function switchView(v) {
-    if (!VIEWS.includes(v)) v = 'dashboard';
-    current = v;
-    VIEWS.forEach(k => { const s = document.getElementById('view-' + k); if (s) s.classList.toggle('on', k === v); });
-    document.querySelectorAll('.nav-item[data-view]').forEach(t => t.classList.toggle('active', t.dataset.view === v));
-    Store.set('ui.view', v);
-    const stage = document.querySelector('.stage'); if (stage) stage.scrollTop = 0;
-    // A problem in one view must never make the whole command centre
-    // unusable.  The sidebar is intentionally still available so the user
-    // can move to another screen while the failing view is diagnosed.
-    try {
-      if (v === 'web') Web.draw();
-      if (v === 'calendar') Cal.grid();
-      if (v === 'profile') Profile.render();
-      if (v === 'stacks') Stacks.refresh();
-      if (v === 'dashboard') Dashboard.render();
-      if (v === 'thoughts') Margin.render();
-      if (v === 'docket' && typeof DocketExtra !== 'undefined') DocketExtra.refresh();
-    } catch (e) {
-      console.error(`Could not render the ${v} view:`, e);
-      const screen = document.getElementById('view-' + v);
-      if (screen && !screen.textContent.trim()) {
-        screen.innerHTML = '<div class="card"><h2>Unable to load this screen</h2><p class="sub">Try another tab, then refresh the page.</p></div>';
-      }
-    }
+  /* ──────── DESK SCENE ──────── */
+  function showDesk() {
+    document.getElementById('deskView').classList.remove('hidden');
+    document.getElementById('fullView').classList.add('hidden');
+    current = null;
+    if (typeof Dashboard !== 'undefined') Dashboard.render();
   }
 
-  // Install the sidebar router independently of feature initialization.
-  // This is deliberately delegated at document level: a broken optional
-  // widget must never leave the navigation controls inert.
-  function wireRouting() {
-    if (document.documentElement.dataset.nexusRouting === 'ready') return;
-    document.documentElement.dataset.nexusRouting = 'ready';
-    document.addEventListener('click', e => {
-      const item = e.target.closest('.nav-item[data-view]');
-      if (item) switchView(item.dataset.view);
-    });
+  /* ──────── FULLSCREEN VIEW ──────── */
+  function openView(v) {
+    document.getElementById('deskView').classList.add('hidden');
+    const fv = document.getElementById('fullView');
+    fv.classList.remove('hidden');
+    // re-trigger the CRT turn-on animation
+    fv.style.animation = 'none';
+    fv.offsetHeight; // force reflow
+    fv.style.animation = '';
+
+    current = v;
+    VIEWS.forEach(k => document.getElementById('view-' + k).classList.toggle('on', k === v));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.view === v));
+    Store.set('ui.view', v);
+    if (v === 'web') Web.draw();
+    if (v === 'calendar') Cal.grid();
+    if (v === 'profile') Profile.render();
+    if (v === 'stacks') Stacks.refresh();
   }
 
   /* ──────── CLOCK ──────── */
@@ -199,7 +197,7 @@
       const blob = new Blob([JSON.stringify({ v: 1, at: Date.now(), data: Store.dump(), imgs }, null, 1)], { type: 'application/json' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = `nexus-${iso(new Date())}.json`;
+      a.download = `polymath-os-${iso(new Date())}.json`;
       a.click(); URL.revokeObjectURL(a.href);
       toast('Backed up. Keep the file somewhere safe.');
     });
@@ -289,6 +287,7 @@
     else if (Sync.enabled) line = 'Sync is set up but you are in offline mode. ' + line;
     else line = 'Offline (local only). Set up Supabase to sync across devices — see README. ' + line;
     g.textContent = line;
+    // relabel logout button to match mode
     const lo = document.getElementById('setLogout');
     if (lo) lo.textContent = u ? 'Sign out' : 'Log out';
   }
@@ -299,17 +298,7 @@
     Themes.apply(Themes.current());
     buildSettings();
 
-    // Wire and activate navigation before initializing individual modules.
-    // Previously an exception in any module below stopped execution here,
-    // leaving every `.view` hidden and every sidebar tab inert.
-    wireRouting();
-    switchView(Store.get('ui.view', 'dashboard'));
-
-    const safeInit = (name, fn) => {
-      try { fn(); }
-      catch (e) { console.error(`Could not initialize ${name}:`, e); }
-    };
-
+    // sync status dot (only when signed in)
     const dot = document.getElementById('syncDot');
     if (dot && Sync.currentUser && Sync.currentUser()) {
       dot.hidden = false;
@@ -321,41 +310,49 @@
       });
     }
 
-    safeInit('mobile layout', () => Mobile.init());
-    safeInit('profile', () => Profile.render());
-    safeInit('web', () => Web.init());
-    safeInit('shelf', () => Books.init());
-    safeInit('stacks', () => Stacks.init());
-    safeInit('calendar', () => Cal.init());
-    safeInit('margin', () => Margin.init());
-    safeInit('gallery', () => Gallery.init());
-    safeInit('dashboard', () => Dashboard.init());
-    safeInit('docket', () => Docket.init());
-    if (typeof DocketExtra !== 'undefined') safeInit('docket summary', () => DocketExtra.init());
+    Mobile.init();
+    Profile.render(); Web.init(); Books.init(); Stacks.init(); Cal.init(); Margin.init();
+    Gallery.init(); Dashboard.init(); Docket.init();
     clock(); setInterval(clock, 20000);
     gauge(); setInterval(gauge, 8000);
 
+    // dashboard quick-nav → open view
+    document.querySelectorAll('.quick-nav[data-view]').forEach(m => {
+      m.onclick = () => openView(m.dataset.view);
+    });
+
+    // back to desk
+    document.getElementById('backBtn').onclick = showDesk;
+
+    // tab switching within fullscreen
+    document.querySelectorAll('.tab[data-view]').forEach(t => {
+      t.onclick = () => openView(t.dataset.view);
+    });
+
+    // backup / restore
     document.getElementById('topExport').onclick = backup;
     document.getElementById('fileImport').onchange = e => e.target.files[0] && restore(e.target.files[0]);
 
+    // keyboard shortcuts
     document.addEventListener('keydown', e => {
       if (/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName) || document.activeElement.isContentEditable) return;
       if (e.key === 'Escape') {
         const sp = document.getElementById('settingsPanel');
         if (sp && !sp.classList.contains('hidden')) { sp.classList.add('hidden'); return; }
+        if (current) showDesk();
         return;
       }
       const n = parseInt(e.key, 10);
-      if (n >= 1 && n <= VIEWS.length) switchView(VIEWS[n - 1]);
+      if (n >= 1 && n <= VIEWS.length) openView(VIEWS[n - 1]);
     });
 
-    // Repaint the selected view now that all of its data modules have had a
-    // chance to initialize.
-    switchView(current || Store.get('ui.view', 'dashboard'));
+    // if there's a saved view, jump straight in on reload
+    const last = Store.get('ui.lastDesk', true);
+    if (!last) {
+      const sv = Store.get('ui.view', null);
+      if (sv) openView(sv);
+    }
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    wireRouting();
-    checkLogin();
-  });
+  document.addEventListener('DOMContentLoaded', checkLogin);
 })();
