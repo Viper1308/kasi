@@ -1,7 +1,23 @@
 /* ══════════════ THE SHELF — books as objects on a receding bookcase ══════════════ */
 const Books = (() => {
   let books = Store.get('books', []);
+  let filter = 'all';
   const save = () => Store.set('books', books);
+
+  function applyFilter() {
+    document.querySelectorAll('#shelves .shelf').forEach(sh => {
+      sh.hidden = filter !== 'all' && sh.dataset.status !== filter;
+    });
+  }
+  function wireShelfTabs() {
+    const tabs = document.getElementById('shelfTabs');
+    if (!tabs) return;
+    tabs.querySelectorAll('button').forEach(b => b.onclick = () => {
+      filter = b.dataset.f;
+      tabs.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+      applyFilter();
+    });
+  }
   const SHELVES = [['reading', 'Currently reading'], ['read', 'Finished'], ['want', 'Want to read']];
 
   const PALETTE = ['#7a2e2e', '#2f4a6d', '#3d5a3a', '#6b4a1f', '#4a2f5e', '#1f4f52', '#7d5320', '#503a2c', '#2b3a55', '#5e2a44'];
@@ -184,7 +200,7 @@ const Books = (() => {
       'Gödel Escher Bach,Douglas Hofstadter,Want to read,,1979,On the list forever\n';
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
-    a.download = 'polymath-books-template.csv'; a.click(); URL.revokeObjectURL(a.href);
+    a.download = 'nexus-books-template.csv'; a.click(); URL.revokeObjectURL(a.href);
     toast('Template downloaded. Fill it in, save as CSV or Excel, then import.');
   }
 
@@ -197,6 +213,7 @@ const Books = (() => {
     SHELVES.forEach(([k, name]) => {
       const list = books.filter(b => b.status === k);
       const sh = el('div', 'shelf');
+      sh.dataset.status = k;
       sh.innerHTML = `<div class="shelf-label">${name} · ${list.length}</div>`;
       const back = el('div', 'shelf-back');
       const row = el('div', 'shelf-books');
@@ -217,6 +234,7 @@ const Books = (() => {
       bookcase.appendChild(sh);
     });
     host.appendChild(bookcase);
+    applyFilter();
     const hint = document.getElementById('bkHint');
     if (hint) hint.textContent = books.length ? `${books.length} on the shelf` : 'Covers and spine colours come from Open Library.';
   }
@@ -269,6 +287,7 @@ const Books = (() => {
   function shut() { const s = document.getElementById('bookStage'); if (s) { s.hidden = true; s.innerHTML = ''; } }
 
   function init() {
+    wireShelfTabs();
     document.getElementById('bkAdd').onclick = add;
     ['bkTitle', 'bkAuthor'].forEach(id => document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') add(); }));
     document.addEventListener('keydown', e => { if (e.key === 'Escape') shut(); });

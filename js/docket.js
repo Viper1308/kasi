@@ -3,11 +3,11 @@
    mock-score log with charts, and an error log, for CLAT 2027 and IIM
    Bangalore UGAT). It was built against the `window.storage` persistent-
    storage API, so rather than rewire its internals, the shim below gives
-   it that exact API — backed by KASI's own Store — so the widget's code
+   it that exact API — backed by NEXUS's own Store — so the widget's code
    runs completely unmodified below this line.
 
    Because it rides on Store, its data now lives in the same 'pos:'
-   namespace as everything else in KASI: it's included automatically in
+   namespace as everything else in NEXUS: it's included automatically in
    Settings → Back up data, restore, and Supabase sync, with no extra
    wiring needed.
    ================================================================== */

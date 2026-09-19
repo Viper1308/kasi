@@ -2,6 +2,17 @@
 const Themes = (() => {
   // Each theme overrides a handful of root vars. Kept small on purpose.
   const THEMES = {
+    nexus: {
+      name: 'Nexus Violet', mood: 'near-black, violet command deck',
+      vars: {
+        '--room': '#0b0a11', '--wall': '#0e0c15', '--screen': '#150f20', '--screen-bg': '#0e0c15',
+        '--panel': '#150f20', '--panel-2': '#1c1530', '--line': '#2a2240',
+        '--ink': '#f3f1f9', '--dim': '#a49bc4', '--faint': '#655a85',
+        '--amber': '#8b6df0', '--cyan': '#5fb4e0', '--rose': '#e0708a', '--violet': '#8b6df0',
+        '--desk-top': '#221c33', '--desk': '#1a1626', '--desk-dark': '#0e0c15'
+      },
+      accent2: '#5fb4e0'
+    },
     hud: {
       name: 'HUD Neon', mood: 'near-black, cyan/blue command-deck',
       vars: {
@@ -158,7 +169,7 @@ const Themes = (() => {
   }
   const getCustomBase = () => Store.get('ui.customBase', null);
 
-  let currentKey = Store.get('ui.theme', 'hud');
+  let currentKey = Store.get('ui.theme', 'nexus');
 
   function apply(key) {
     if (key === 'custom') THEMES.custom = buildCustom(Store.get('ui.customBase', null) || DEFAULT_CUSTOM_BASE);
